@@ -1,0 +1,50 @@
+# Secrets and local environment configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+.npm-cache/
+*.pem
+*.key
+*service-account*.json
+
+# Dependencies and package-manager caches
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+
+# Build, framework and test output
+.next/
+out/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# Local runtime logs and caches
+*.log
+logs/
+.cache/
+tmp/
+temp/
+
+# Temporary video renders, media checkpoints and private M0 runs
+renders/
+render-output/
+video-output/
+output/
+.remotion/
+.m0-runs/
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

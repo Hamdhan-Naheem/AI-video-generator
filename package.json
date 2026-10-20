@@ -1,0 +1,28 @@
+{
+  "name": "ai-video-creator-m0",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local offline Remotion feasibility prototype for AI Video Creator V1",
+  "scripts": {
+    "preview": "remotion studio m0/src/index.ts --env-file=.env.example",
+    "render:demo": "remotion render m0/src/index.ts OfflineElectricityDemo output/offline-electricity-demo.mp4 --codec=h264 --concurrency=2 --env-file=.env.example",
+    "typecheck": "tsc --noEmit",
+    "validate:offline": "npm run typecheck && remotion compositions m0/src/index.ts --env-file=.env.example",
+    "check:env": "node m0/src/scripts/check-env.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.9.3"
+  }
+}
