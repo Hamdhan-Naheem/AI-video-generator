@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "m0.plan.v1",
+  "input": {
+    "type": "educational",
+    "style": "cartoon_teacher",
+    "topic": "How Electricity Is Generated",
+    "instructions": "Explain generation and transmission clearly to beginners without implying every generator uses water.",
+    "language": "en",
+    "targetDurationSeconds": 75
+  },
+  "storyboard": {
+    "title": "How Electricity Is Generated",
+    "summary": "A beginner-friendly sample script about energy turning a turbine, a generator producing electricity, and transmission to homes. This is an offline fixture for human factual review.",
+    "narrationSections": [
+      {"sceneId": "scene-01", "text": "How does electricity reach the lights in our homes? It begins with an energy source, a machine that spins, and a generator. Let's follow the journey."},
+      {"sceneId": "scene-02", "text": "Different power stations use different energy sources. Moving water, steam made from heat, or wind can turn a turbine. Some other systems make electricity without turbines."},
+      {"sceneId": "scene-03", "text": "A turbine has blades connected to a shaft. When water, steam, or wind pushes the blades, the shaft rotates. That spinning motion is mechanical energy."},
+      {"sceneId": "scene-04", "text": "The rotating shaft drives a generator. Inside, motion changes the relationship between magnets and coils of wire, inducing an electric current. That is the generation step."},
+      {"sceneId": "scene-05", "text": "The electricity is then prepared for travel through the grid. Transformers can raise its voltage for efficient long-distance movement before it reaches local networks."},
+      {"sceneId": "scene-06", "text": "Power lines carry electricity away from the station. Closer to homes, equipment lowers the voltage to useful levels. Transmission moves electricity; it does not generate it."},
+      {"sceneId": "scene-07", "text": "So remember the sequence: an energy source can spin a turbine, a generator makes electricity, and the grid delivers it. Different sources can start that journey."}
+    ],
+    "scenes": [
+      {
+        "id": "scene-01", "order": 1, "templateId": "teacher_intro_v1",
+        "narration": "How does electricity reach the lights in our homes? It begins with an energy source, a machine that spins, and a generator. Let's follow the journey.",
+        "visuals": [{"kind": "character", "description": "Teacher greets viewers in a clear opening layout."}, {"kind": "label", "description": "Title: How Electricity Is Generated."}],
+        "animationActions": ["teacher_wave", "teacher_blink", "fade_transition"], "estimatedDurationSeconds": 10
+      },
+      {
+        "id": "scene-02", "order": 2, "templateId": "teacher_explanation_v1",
+        "narration": "Different power stations use different energy sources. Moving water, steam made from heat, or wind can turn a turbine. Some other systems make electricity without turbines.",
+        "visuals": [{"kind": "character", "description": "Teacher introduces water, steam, and wind as alternative sources."}, {"kind": "icon", "description": "Small water, steam, and wind symbols support the teacher's explanation."}],
+        "animationActions": ["teacher_head_motion", "caption_swap"], "estimatedDurationSeconds": 11
+      },
+      {
+        "id": "scene-03", "order": 3, "templateId": "teacher_beside_diagram_v1",
+        "narration": "A turbine has blades connected to a shaft. When water, steam, or wind pushes the blades, the shaft rotates. That spinning motion is mechanical energy.",
+        "visuals": [{"kind": "character", "description": "Teacher stands beside the turbine explanation."}, {"kind": "diagram", "description": "Highlight rotating turbine blades and the connected shaft beside the teacher."}],
+        "animationActions": ["turbine_spin", "teacher_head_motion"], "estimatedDurationSeconds": 12
+      },
+      {
+        "id": "scene-04", "order": 4, "templateId": "full_screen_diagram_v1",
+        "narration": "The rotating shaft drives a generator. Inside, motion changes the relationship between magnets and coils of wire, inducing an electric current. That is the generation step.",
+        "visuals": [{"kind": "diagram", "description": "Connect the spinning shaft to a generator and pulse the generator icon when current is produced."}],
+        "animationActions": ["turbine_spin", "generator_pulse", "electricity_flow"], "estimatedDurationSeconds": 12
+      },
+      {
+        "id": "scene-05", "order": 5, "templateId": "teacher_beside_diagram_v1",
+        "narration": "The electricity is then prepared for travel through the grid. Transformers can raise its voltage for efficient long-distance movement before it reaches local networks.",
+        "visuals": [{"kind": "character", "description": "Teacher points beside a simplified transformer and power grid diagram."}, {"kind": "flow", "description": "Move a clear electricity flow indicator toward a simplified power grid label."}],
+        "animationActions": ["electricity_flow", "teacher_head_motion", "caption_swap"], "estimatedDurationSeconds": 11
+      },
+      {
+        "id": "scene-06", "order": 6, "templateId": "full_screen_diagram_v1",
+        "narration": "Power lines carry electricity away from the station. Closer to homes, equipment lowers the voltage to useful levels. Transmission moves electricity; it does not generate it.",
+        "visuals": [{"kind": "flow", "description": "Trace electricity from generator to power lines to a home; distinguish generation from transmission."}],
+        "animationActions": ["electricity_flow", "caption_swap"], "estimatedDurationSeconds": 11
+      },
+      {
+        "id": "scene-07", "order": 7, "templateId": "teacher_conclusion_v1",
+        "narration": "So remember the sequence: an energy source can spin a turbine, a generator makes electricity, and the grid delivers it. Different sources can start that journey.",
+        "visuals": [{"kind": "character", "description": "Teacher concludes with a final recap and wave."}, {"kind": "label", "description": "Recap: energy source, generator, then grid delivery."}],
+        "animationActions": ["teacher_wave", "fade_transition"], "estimatedDurationSeconds": 8
+      }
+    ],
+    "estimatedDurationSeconds": 75
+  }
+}

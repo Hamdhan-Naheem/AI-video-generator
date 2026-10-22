@@ -1,6 +1,7 @@
 {
   "name": "ai-video-creator-m0",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "description": "Local offline Remotion feasibility prototype for AI Video Creator V1",
   "scripts": {
@@ -8,7 +9,33 @@
     "render:demo": "remotion render m0/src/index.ts OfflineElectricityDemo output/offline-electricity-demo.mp4 --codec=h264 --concurrency=2 --env-file=.env.example",
     "typecheck": "tsc --noEmit",
     "validate:offline": "npm run typecheck && remotion compositions m0/src/index.ts --env-file=.env.example",
-    "check:env": "node m0/src/scripts/check-env.mjs"
+    "check:env": "node m0/src/scripts/check-env.mjs",
+    "plan:fixture": "tsx m0/src/planning/review-cli.ts fixture",
+    "plan:refresh-fixture": "tsx m0/src/planning/review-cli.ts refresh-fixture",
+    "plan:review": "tsx m0/src/planning/review-cli.ts review",
+    "plan:show": "tsx m0/src/planning/review-cli.ts show",
+    "plan:approve": "tsx m0/src/planning/review-cli.ts approve",
+    "plan:reject": "tsx m0/src/planning/review-cli.ts reject",
+    "plan:check-approved": "tsx m0/src/planning/review-cli.ts check-approved",
+    "plan:check-render-ready": "tsx m0/src/planning/review-cli.ts check-render-ready",
+    "plan:generate-once": "tsx m0/src/planning/live-gemini-cli.ts",
+    "plan:generate-retry1": "tsx m0/src/planning/live-gemini-cli.ts retry1",
+    "test:planning": "tsx --test m0/test/planning.test.ts",
+    "test:narration": "tsx --test m0/test/narration.test.ts",
+    "test:draft": "tsx --test m0/test/draft.test.ts",
+    "test:recovery": "tsx --test m0/test/recovery.test.ts",
+    "test:phase6a": "tsx --test m0/test/planning.test.ts m0/test/draft.test.ts m0/test/recovery.test.ts m0/test/narration.test.ts m0/test/showcase.test.ts m0/test/showcase-voiceover.test.ts",
+    "test:phase6b": "tsx --test m0/test/planning.test.ts m0/test/draft.test.ts m0/test/recovery.test.ts m0/test/narration.test.ts m0/test/showcase.test.ts m0/test/showcase-voiceover.test.ts m0/test/phase6b.test.ts",
+    "test:showcase": "tsx --test m0/test/showcase.test.ts",
+    "test:showcase-voiceover": "tsx --test m0/test/showcase-voiceover.test.ts",
+    "showcase:script": "tsx m0/src/showcase/script-cli.ts",
+    "validate:narration:offline": "npm run typecheck && npm run test:narration",
+    "draft:prepare": "tsx m0/src/video/prepare-draft.ts",
+    "draft:render": "remotion render m0/src/index.ts ElectricityStoryboardDraft m0/runs/electricity/gemini-live-phase2b-retry1/draft-4a/video-only.mp4 --codec=h264 --scale=0.5 --concurrency=2 --muted --props=m0/runs/electricity/gemini-live-phase2b-retry1/draft-4a/render-props.json --env-file=.env.example --log=error --overwrite",
+    "draft:mux": "tsx m0/src/video/mux-draft.ts",
+    "draft:preview": "remotion studio m0/src/index.ts --props=m0/runs/electricity/gemini-live-phase2b-retry1/draft-4a/render-props.json --env-file=.env.example",
+    "render:product-demo": "remotion render m0/src/index.ts ProductShowcaseDemo m0/runs/showcase-phase5b/product-demo.mp4 --codec=h264 --scale=0.5 --concurrency=2 --env-file=.env.example --log=error --overwrite",
+    "render:software-demo": "remotion render m0/src/index.ts SoftwareExplainerDemo m0/runs/showcase-phase5b/software-demo.mp4 --codec=h264 --scale=0.5 --concurrency=2 --env-file=.env.example --log=error --overwrite"
   },
   "engines": {
     "node": ">=22"
@@ -17,12 +44,14 @@
     "@remotion/cli": "4.0.537",
     "react": "19.2.9",
     "react-dom": "19.2.9",
-    "remotion": "4.0.537"
+    "remotion": "4.0.537",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.3",
+    "tsx": "4.23.15",
     "typescript": "5.9.3"
   }
 }

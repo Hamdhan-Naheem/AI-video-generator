@@ -5,8 +5,8 @@
 | Field | Value |
 | --- | --- |
 | Working name | AI Video Creator |
-| Release / document version | V1 / 2.3, account deletion, configurable limits and release priorities |
-| Updated | 17 October 2026, Asia/Colombo |
+| Release / document version | V1 / 2.4, approved M0 acceptance sequencing |
+| Updated | 21 October 2026, Asia/Colombo |
 | Status | Final product scope; technical defaults subject to M0 validation |
 | Owner | Project owner |
 | Purpose | Requirements for later architecture, database, API, UI/UX and implementation planning |
@@ -14,6 +14,8 @@
 This document consolidates the existing requirements in place using the latest multi-user SaaS and deployment brief as the source of truth. It corrects the prior single-owner interpretation: local development is the first environment, not a permanent product restriction. Public users can register after the release gates pass. Email/password authentication remains simple, with signup confirmation disabled and separate password recovery. Development is free-first; paid services require explicit approval. This artifact contains requirements only, not application implementation or separate architecture/database/API designs.
 
 Version 2.3 adds confirmed account deletion and minimal backend operational controls, clarifies configurable usage limits, and classifies every acceptance criterion by public-release priority. The approved product, authentication, video pipeline, stack and deployment phases are preserved. Proposed numerical measurements are distinct from hard correctness gates under sections 23 and 29.
+
+Version 2.4 records the owner's approved separation of M0 local feasibility from M1–M5 production implementation and testing. It retains every V1 feature and P0 release gate, records the three reviewed narrated prototypes, and places visual/character customization and music after V1. No P0 requirement is waived.
 
 **Confirmed** requirements are finalized product/technology decisions. **Proposed** defaults are numerical limits, thresholds and operational settings to validate in M0, not measured guarantees. **Future** capabilities are outside V1. Material changes must update this document.
 
@@ -121,7 +123,7 @@ Non-English source material may be understood where supported, but review must s
 
 Password length, character library size, lip-cue thresholds, retention and performance targets are proposed separately. Revise defaults only with a documented reason and updated acceptance checks. No guaranteed number of free videos is promised.
 
-Per-user generation totals, script/idea/refinement request counts, voice-sample allowances, simultaneous-job caps and global service ceilings are configurable backend settings. Determine their numerical values and reset periods after measuring Gemini, ElevenLabs, rendering, storage and bandwidth during M0/private testing; no fixed free-video entitlement is established here.
+Per-user generation totals, script/idea/refinement request counts, voice-sample allowances, simultaneous-job caps and global service ceilings are configurable backend settings. Determine their numerical values and reset periods from M0 local/provider evidence plus M1–M5 private storage, bandwidth and realistic workload measurements; no fixed free-video entitlement is established here.
 
 ## 7. Video types
 
@@ -171,7 +173,7 @@ A prepared 2D presenter introduces/concludes the video and may remain beside pro
 
 ### 8.4 Selection and fallbacks
 
-Select style in Describe with a sensible default. Proposed initial defaults are one prepared teacher and one prepared presenter, automatically assigned by style. With one preset per role, no separate selection/customization step is required. Keep a versioned extensible registry so additional predefined characters can be introduced later without redesigning planning, approval, cue generation or rendering. A large library and character editor are not required. Validate initial artwork in M0.
+Select style in Describe with a sensible default. Proposed initial defaults are one prepared teacher and one prepared presenter, automatically assigned by style. With one preset per role, no separate selection/customization step is required. Keep a versioned extensible registry so additional predefined characters can be introduced later without redesigning planning, approval, cue generation or rendering. A large library and character editor are not required. Validate the teacher artwork in M0 and presenter artwork with M3 rendering.
 
 Style/character changes require scene-plan review and invalidate affected approval/cue/render artifacts. Preserve compatible content/audio where safe. Reject stale incompatible client requests server-side.
 
@@ -377,7 +379,7 @@ Approval binds revision and settings hash, including sources, narration, scene p
 
 ## 15. ElevenLabs narration requirements
 
-Use ElevenLabs for three configured English voice presets, one default, short samples, narration audio and supported timing. Configure model/voice IDs and verify endpoint availability/rights in M0; do not assume every model supports every operation.
+Use ElevenLabs for three configured English voice presets, one default, short samples, narration audio and supported timing. Complete all-three-voice model/endpoint compatibility and intended-use rights checks in M3 before their production pipeline use; do not assume every model supports every operation. M0's single Bella prototype is not evidence for all three presets.
 
 Generate approved narration through speech-with-timing, preferably one continuous request with scene spans. Cache owner-scoped samples by text/voice/model/settings hash within the 15-second proposed limit. Samples, retries and revisions can consume credits.
 
@@ -911,7 +913,7 @@ Official sources checked on 17 October 2026; recheck before public release. Avoi
 
 Track planning/document chunks, samples, narration, retries/uncertain provider outcomes, rendering, storage and bandwidth by user/job and shared service. Configure server-enforced per-user generation/request/storage allowances and shared provider-rate/usage ceilings before accepting public work. Numerical allowances are proposed operational settings derived from measured costs and available quotas; no arbitrary free-video count is promised.
 
-Explicit backend-configurable classes are full-video generation attempts/totals, AI idea/script/regeneration/refinement requests, voice samples, simultaneous video jobs, and shared provider rate/usage limits. Set actual numeric values and reset periods after M0 measures Gemini, ElevenLabs, rendering, storage and bandwidth; verify them in private testing. The initial one-job proposal is not a fixed free-plan entitlement. Count outstanding queued/running/retry/held video jobs consistently against the configured per-user concurrency cap so a pause or retry cannot free a slot incorrectly.
+Explicit backend-configurable classes are full-video generation attempts/totals, AI idea/script/regeneration/refinement requests, voice samples, simultaneous video jobs, and shared provider rate/usage limits. Set actual numeric values and reset periods from M0 local/provider measurements and M1–M5 private storage, bandwidth and realistic workload evidence; verify them in private testing. The initial one-job proposal is not a fixed free-plan entitlement. Count outstanding queued/running/retry/held video jobs consistently against the configured per-user concurrency cap so a pause or retry cannot free a slot incorrectly.
 
 Reserve active-job and usage capacity atomically so parallel users/tabs/workers cannot exceed remaining allowances. A duplicate submission must not reserve twice. Reconcile consumed versus reserved units; do not automatically release uncertain billed usage as free capacity. Count samples, retries and long-document planning as well as successful exports. Planning/sample endpoints also need limits to prevent bypassing video-job quotas.
 
@@ -919,7 +921,7 @@ Per-user quotas do not multiply the service account's provider allowance or prev
 
 Use the plain limit messages in section 11.5; do not offer an automatic purchase or imply unlimited AI credits. A quota configuration change must not erase consumption already recorded for its period. Account restriction/deletion and global pause are separate controls with section 20.5 precedence; exhausted generation quota cannot block account deletion or safe cleanup.
 
-Select model/voice IDs and public worker/hosting plans from M0/private-test measurements. Record unresolved licensing/pricing as needing official confirmation when unavailable. Explicit paid-service approval is required before activation; no speculative price or performance guarantee.
+Select model/voice IDs and public worker/hosting plans from M0 evidence plus M2/M3/private-test compatibility and resource measurements. Record unresolved licensing/pricing as needing official confirmation when unavailable. Explicit paid-service approval is required before activation; no speculative price or performance guarantee.
 
 ## 27. Explicit V1 exclusions and future enhancements
 
@@ -940,6 +942,8 @@ Select model/voice IDs and public worker/hosting plans from M0/private-test meas
 | Full admin dashboard, complex operator roles and organization-management product | Minimal authorized backend pause/account-restriction commands are included; a separate administration product is not |
 | Registration verification/confirmation, signup OTP, MFA, social/phone/magic-link login, activation/onboarding | Not implemented or required by this V1; no provider expansion planned here |
 
+**Owner-approved post-V1 backlog:** AI-recommended backgrounds/colors/themes, manual theme/background selection, advanced branding, configurable prepared cartoon characters and voice-character matching, optional licensed-library or user-provided background music for all three categories, music volume/fades/narration-aware ducking, and later optional AI-generated music. These are outside V1 acceptance. Future implementation requires its own scope, rights and service decisions; no additional V1 style or creation stage is implied.
+
 **Included distinction:** prepared 2D teacher/presenter characters with basic speech-reactive mouths, blinking, head movement and limited gestures are V1 features. Their advanced alternatives being excluded must not be interpreted as excluding basic cartoon presentation.
 
 ## 28. Technical feasibility and testing
@@ -957,8 +961,12 @@ Before full feature implementation, generate a complete **75-second-target educa
 | Narration synchronization | At least 10 sampled anchors measured against the proposed 250 ms target, with deviations recorded; functional synchronization passes P0 AC61; normalization/repeated phrases tested separately |
 | Subtitle/layout | Working readable English subtitles; no clipping/occlusion; subtitle-off variant reuses audio |
 | Quality review | Project owner/tester review confirms required coherent/readable output and educational accuracy; record proposed section 9 scores and pilot comprehension as P2 evidence |
-| Runtime/cost | Record queue/stage/total time, peak CPU/RAM, disk/output size, provider units, retries and estimated cost |
-| Recovery | Inject a render failure and prove reuse of saved narration/cues after retry; restart a worker without losing accepted work |
+| Runtime/cost | Record available provider units, render stage/total time and retries; measure CPU, memory and scratch/output disk during a bounded local render; estimate storage and bandwidth from observed output sizes and stated assumptions |
+| Recovery | Inject failure after a local Remotion render begins; restart the local render process from pinned approved assets and saved narration/cues without another Gemini or ElevenLabs request; document local constraints. Durable queue leases and worker restart are M3 obligations. |
+
+Before M0 sign-off, strengthen narration, scene-transition, subtitle and visual-anchor checks; verify subtitle-enabled and subtitle-disabled behavior with saved audio; and exercise supported duration boundaries with offline data. Record measured deviations and rendering/recovery limits. The 62/90-second real generated-video checks remain required in M3/M5. None of these remaining M0 checks is Passed until evidence exists.
+
+The owner has reviewed and approved three local narrated demonstrations: seven-scene electricity Educational/Cartoon Teacher (75 seconds, 1080 × 1920), LUMA MINI Product Branding (17.27 seconds, 540 × 960), and NORTHSTAR Software Project Explainer (28.27 seconds, 540 × 960). All are 30 fps H.264/AAC with approved visuals, narration and synchronization. The short fictional product/software videos establish presentation feasibility, not 62–90-second source-grounded production readiness. Existing ElevenLabs Free-plan recordings are for noncommercial prototype use only. Commercial use requires rights for the actual assets used; a later paid plan must not be presumed to license these Free-plan recordings retroactively.
 
 M0 is not complete just because a provider call succeeds. Preserve the measured results and review the rendered prototype before committing to the full build. If thresholds fail, document the exact issue and options for owner review. Do not silently add Rhubarb/paid avatar services, promise phoneme accuracy or remove required cartoons.
 
@@ -966,14 +974,12 @@ M0 must demonstrate the complete functioning teacher workflow and record quality
 
 ### 28.2 Additional feasibility checks
 
-- Validate current Gemini image understanding, long-document budget behavior and structured output against registries.
-- Test all three ElevenLabs voice presets/model endpoint support, samples, normalized timings and intended-use rights.
-- Measure targets 62/75/90 and the rate of returning to review for duration fit.
-- Validate presenter assets/gestures and all seven compatible type/style combinations from section 8; reject the two incompatible combinations.
-- Prove each photo/diagram/screenshot/character template is readable and affordable to render.
-- Test PDF/DOCX parsing, unsupported scans, mixed pages, malicious expansion and proposed limits.
-- Verify private storage/upload/download size constraints and local/hosted worker lifecycle.
-- Confirm multiple accounts can sign up without email confirmation, each reaches its own dashboard immediately, cross-user requests fail and recovery works independently without OTP/social/MFA.
+These V1 obligations are staged by the production capability they require; they are not additional M0 exit checks. M5 verifies the integrated acceptance matrix, and section 23 priorities and section 29 release gates still apply.
+
+- **M1 foundation:** implement and directly test signup/login/recovery, authorization, current-account checks, RLS isolation and private upload/Storage ownership with at least two accounts. Exercise bounded upload rejection and failed-upload cleanup/recovery as soon as the private upload path exists. Recheck these in M5; never expose one user's data during M1 development.
+- **M2 planning:** validate current Gemini image understanding, long-document/structured-output behavior and source-grounded photo/screenshot/PDF/DOCX intake, including unsupported scans, mixed pages, malicious expansion and limits. Plan all seven compatible type/style combinations, reject the two incompatible combinations, and validate approved templates, claims and presenter references. Test this at planning trust boundaries and again end to end in M5.
+- **M3 pipeline:** test all three English voice presets, endpoint/model support, samples, normalized timings and intended-use rights before use; implement and validate presenter assets/gestures and render all seven allowed combinations with readable photo/diagram/screenshot/character templates. Test real generated 62/75/90-second duration fits and return-to-review behavior. Complete durable jobs, leases, fencing, worker restart, private artifact publication and upload-recovery integration when these systems are built. Recheck quality/recovery across the full matrix in M5.
+- **M5 local/private integration:** verify complete source-grounded journeys, three-voice/video-style/duration coverage, private files, cross-account isolation, storage/queue/render recovery and resource limits using the section 23 priority matrix. M6 confirms production topology and applicable commercial rights before public release.
 
 ### 28.3 Required implementation validation
 
@@ -1010,12 +1016,12 @@ This PRD does not assert that these gates have passed; they are requirements for
 
 | Milestone | Deliverable / exit condition |
 | --- | --- |
-| M0 — Technical Feasibility | Complete electricity teacher video; plan/speech/activity/animation/subtitle/render proof; Gemini/ElevenLabs/render/storage/bandwidth measurements to inform configurable limits; record P2 targets separately from functional failures |
-| M1 — Application Foundation | Local Next.js/Tailwind, multi-user signup without confirmation, immediate private dashboards, login/logout/recovery, sessions/RLS, minimal Account Settings, lifecycle flags, private uploads/ownership and draft saving |
-| M2 — AI Content Planning | Three types/styles, automatic simple character presets, extraction, understanding/ideas/scripts/scenes/refinement and revision approval |
-| M3 — Video Generation Pipeline | ElevenLabs/cues/Remotion, durable worker/progress/checkpoints; preflight/stage/publication checks for account lifecycle and operational holds |
+| M0 — Technical Feasibility | Three reviewed narrated local category prototypes; complete remaining offline mid-render failure/local restart, bounded CPU/memory/disk and storage/bandwidth estimates, narration/visual-anchor/subtitle checks and offline duration boundaries before sign-off. Record P2 targets separately from functional failures. |
+| M1 — Application Foundation | Local Next.js/Tailwind, multi-user signup without confirmation, immediate private dashboards, login/logout/recovery, sessions/RLS and direct isolation tests, minimal Account Settings, lifecycle flags, private uploads/ownership with failed-upload recovery and draft saving |
+| M2 — AI Content Planning | Three types/styles and seven compatible planning paths, automatic simple character presets, bounded source-grounded extraction and Gemini understanding/ideas/scripts/scenes/refinement, invalid-pair rejection and immutable revision approval |
+| M3 — Video Generation Pipeline | Three English voices/samples, presenter and seven-pair rendering, real 62/75/90-second fit, ElevenLabs/cues/Remotion, durable worker leases/restart/progress/checkpoints, upload/artifact recovery and preflight/stage/publication checks |
 | M4 — Application Completion | Preview/download/revisions/duplication/project deletion; permanent account deletion with durable Auth/file cleanup; configurable quotas; minimal backend pause/restriction/restoration and audit controls |
-| M5 — Local and Private Testing | Full matrix with P0/P1/P2 results; multi-account isolation, quota races/configuration, deletion/Auth/storage/late-write failures, operational holds/restoration, content/quality and measured usage |
+| M5 — Local and Private Testing | Full three-type/seven-pair/three-voice/source/duration matrix with P0/P1/P2 results; multi-account isolation, quota races/configuration, deletion/Auth/storage/late-write failures, worker/upload recovery, operational holds/restoration, content/quality and measured usage |
 | M6 — Public Deployment Preparation | Production Supabase/Vercel/independent worker, isolated secrets, validated allowances and backend operator access, monitoring/audit/cleanup/backup policy, licensing; all P0 pass and any P1 exceptions explicitly approved |
 
 Do not assign speculative deadlines. Local development/testing does not require production hosting. Prepare and deploy publicly only after critical release conditions pass and deployment/paid-service authorization is given. This PRD task does not begin implementation or activate services.
@@ -1027,12 +1033,12 @@ These resolve implementation details without reopening confirmed scope.
 | Decision | Handling | Deadline |
 | --- | --- | --- |
 | Product name | Keep working name unless the project owner selects another | Before public branding, if needed |
-| Gemini model and context budgets | Choose current image-capable structured-output model/tier and configure IDs | M0 |
-| ElevenLabs voice/model/plan | Test three English presets/timing; confirm permitted testing/commercial rights and current quotas; paid activation requires explicit approval | M0 / before public use |
-| Simple character artwork | One teacher and one presenter, closed/open mouth, blinking and one gesture; no customization | M0 |
+| Gemini model and context budgets | Choose current image-capable structured-output model/tier and configure IDs for source-grounded planning | M2 |
+| ElevenLabs voice/model/plan | Test three English presets/timing; confirm permitted testing/commercial rights and current quotas; paid activation requires explicit approval | M3 / before use and public release |
+| Simple character artwork | Preserve the proven teacher; add a prepared presenter with closed/open mouth, blinking and one gesture; no customization | M3 |
 | Lip activity algorithm/thresholds | Local envelope + timing; validate proposed quality criteria and deterministic cues | M0 |
-| Template coverage/layouts | Map all compatible styles to supported scene library and fallback behavior | M0 / M2 |
-| Upload/text limits | Retain section 6.3 defaults unless measured memory/context/storage limits justify revision | M0 / input completion |
+| Template coverage/layouts | Plan seven compatible combinations in M2; render and validate each in M3, then run full M5 matrix | M2 / M3 / M5 |
+| Upload/text limits | Retain section 6.3 defaults unless measured memory/context/storage limits justify revision | M1 uploads / M2 parsing / M5 validation |
 | Worker host/resources/deadlines | Local process initially; choose independently hosted production worker from measured CPU/RAM/time/cost/reliability | M0 measurements / M6 selection |
 | Signup/password/rate settings | Multiple accounts, confirmation disabled, tested password policy and unverified-email abuse controls; no added verification flow | M1 / security review before launch |
 | Per-user/shared allowances | Finalize backend-configured video/script/sample/concurrency limits, periods and provider ceilings from M0/private-test Gemini/ElevenLabs/render/storage/bandwidth evidence; no fixed free-video promise | M0 evidence / M5 settings / M6 gate |

@@ -2,7 +2,7 @@
 
 ## Authority and scope
 
-- Read `docs/PRD.md` (approved v2.3) and `docs/SYSTEM_ARCHITECTURE.md` (approved v1.0) before planning or changing implementation. The PRD defines product requirements and release priorities; the architecture defines the selected system boundaries. Do not silently change either approved document.
+- Read `docs/PRD.md` (approved v2.4) and `docs/SYSTEM_ARCHITECTURE.md` (approved v1.1) before planning or changing implementation. The PRD defines product requirements and release priorities; the architecture defines the selected system boundaries. Do not silently change either approved document.
 - This file and `docs/ROADMAP.md` organize future work; they do not supersede the approved documents. Record a conflict or material change for project-owner review before implementing a different product/architecture decision.
 - Respect the scope of each request. Documentation setup alone does not authorize application code, dependency installation, external service configuration, provider calls, deployment, or paid usage.
 
@@ -44,5 +44,5 @@
 ## Progress tracking
 
 - `docs/ROADMAP.md` holds planned milestone tasks and exit evidence. `docs/PROGRESS.md` holds actual status and evidence.
-- Use `Not Started`, `In Progress`, `Blocked`, or `Complete` for each M0–M6 milestone. Advance to `Complete` only when its exit conditions are evidenced; record a date and evidence location. Preserve honest partial status and blockers.
+- Use `Not Started`, `In Progress`, `Blocked`, or `Complete` for each M0–M6 milestone. The signed-off M0 status is displayed as `Completed / Owner Approved` to record the explicit owner decision. Advance a milestone to complete only when its exit conditions are evidenced and the required owner decision is recorded; record the date and evidence location. Preserve honest partial status and blockers.
 - Keep the completed-documentation inventory separate from implementation status. Documentation completion does not start M0 or satisfy any implementation/release acceptance check.

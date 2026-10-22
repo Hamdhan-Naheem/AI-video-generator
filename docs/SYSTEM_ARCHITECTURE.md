@@ -4,9 +4,9 @@
 
 | Item | Value |
 | --- | --- |
-| Architecture version | 1.0 |
-| Date | 18 October 2026, Asia/Colombo |
-| Requirements authority | [PRD.md](./PRD.md), approved V1 / document v2.3 |
+| Architecture version | 1.1 (milestone wording clarification only) |
+| Date | 21 October 2026, Asia/Colombo |
+| Requirements authority | [PRD.md](./PRD.md), approved V1 / document v2.4 |
 | Status | Architecture baseline; feasibility-dependent settings explicitly identified |
 | Intended use | Guide M0 planning and later multi-user implementation/design |
 | Work performed here | Documentation only; no implementation, prototype, schema migrations, API specifications, deployments or service activation |
@@ -165,7 +165,7 @@ M0 checkpoint writes are atomic, record completed-stage hashes and never overwri
 
 Produce and inspect the real MP4, validated plan, approved narration text, audio/normalized alignment, scene/caption/character tracks, output metadata and stage measurements. Demonstrate a teacher opening/closing, a teacher-plus-diagram scene and a visual-only explanation. Test pause closure, blinking/head motion and a supported gesture. Check subtitle-off rendering reuses audio and a failed render resumes without repeating successful synthesis.
 
-For target 75, the PRD's current fit window is 72–78 seconds inside hard 62–90 bounds. Proposed settings remain 1080 × 1920, 30 fps, H.264/AAC. Record CPU/RAM, elapsed/queue/stage time, disk/output size and Gemini/ElevenLabs units plus rendering/storage/bandwidth estimates. Additional M0 feasibility checks cover the three voice presets, presenter assets, duration boundaries, supported combinations and parser limits; these do not require a finished SaaS UI.
+For target 75, the PRD's current fit window is 72–78 seconds inside hard 62–90 bounds. Proposed settings remain 1080 × 1920, 30 fps, H.264/AAC. Record CPU/RAM, elapsed/queue/stage time, disk/output size and Gemini/ElevenLabs units plus rendering/storage/bandwidth estimates. M0 additionally requires an injected failure during local rendering, process restart from saved approved assets without new provider requests, stronger narration/scene/subtitle/visual-anchor checks, subtitle-on/off behavior and offline duration-boundary tests. The three-voice, presenter, seven-combination, source/parser, real 62/90-second output, durable worker, private upload and multiuser checks follow PRD v2.4 §§28.2 and 30 in M1–M5. Local-process recovery does not satisfy durable worker lease recovery.
 
 Functional/unsafe failures block feasibility. Proposed millisecond/reviewer/performance targets are measured as P2, not automatic blockers. If basic cartoon quality fails, record limitations and options; do not silently add Rhubarb or paid avatar services. M0 execution and any paid usage require their own later authorization; this document does not start them.
 
@@ -289,7 +289,7 @@ The coordinator resolves authorized object IDs, downloads bounded validated mate
 6. The worker validates the structured response and registry/ownership semantics, then conditionally saves the resulting draft revision. A late planning response cannot overwrite newer user edits.
 7. Review Script displays understanding, unresolved facts, narration, visual descriptions and character appearances. Corrections/refinement repeat planning with new task identity and quota checks; no full narration is synthesized before approval.
 
-Use Gemini schema-constrained responses where supported, followed by server-side Zod and semantic checks. Provider schema support does not establish truth, authorization or compatibility. Model/version and supported schema subset are M0 decisions. [Gemini structured output](https://ai.google.dev/gemini-api/docs/structured-output).
+Use Gemini schema-constrained responses where supported, followed by server-side Zod and semantic checks. Provider schema support does not establish truth, authorization or compatibility. M0 validated one planning path; source-grounded image/long-document model and schema coverage is an M2 decision. [Gemini structured output](https://ai.google.dev/gemini-api/docs/structured-output).
 
 ### 8.2 Controlled scene plan
 
@@ -478,7 +478,7 @@ Manual retries are bounded by configured limits, scope to the failed attempt and
 
 ### 14.1 What is limited
 
-Backend configuration covers per-user video attempts/totals, idea/script/regeneration/refinement requests, voice samples, simultaneous outstanding video jobs, file/storage allowances, and shared provider rate/usage ceilings. Limit periods and numbers follow M0/private-test measurements of Gemini, ElevenLabs, rendering, storage and bandwidth. There is no fixed free-video count, pricing-plan model or customer budget form.
+Backend configuration covers per-user video attempts/totals, idea/script/regeneration/refinement requests, voice samples, simultaneous outstanding video jobs, file/storage allowances, and shared provider rate/usage ceilings. Limit periods and numbers follow M0 local/provider evidence and M1–M5 private storage, bandwidth and workload measurements. There is no fixed free-video count, pricing-plan model or customer budget form.
 
 The browser can display a limit message but cannot grant quota. Held/retry jobs retain correct outstanding-slot accounting. Samples and long-document chunks consume their own applicable allowance; they cannot bypass video admission restrictions through a different endpoint.
 
@@ -702,9 +702,9 @@ Selected architectural decisions describe implementation direction, not evidence
 
 | Question | Current position | Resolve when |
 | --- | --- | --- |
-| Which Gemini model/schema subset handles images, long summaries and plans reliably? | Configurable image-capable model; no unverified model/version pin | M0 |
-| Which three ElevenLabs voices/model provide acceptable English timing and permitted use? | Existing provider only; test samples/normalization/availability | M0, rights confirmed before actual commercial use |
-| Are closed/open assets and activity cues good enough? | One prepared teacher/presenter; no advanced lip-sync dependency | M0 full-video review, including quiet speech and pauses |
+| Which Gemini model/schema subset handles images, long summaries and plans reliably? | Configurable image-capable model; no unverified model/version pin | M2 source-grounded planning |
+| Which three ElevenLabs voices/model provide acceptable English timing and permitted use? | Existing provider only; test samples/normalization/availability | M3 before voice use; rights confirmed before actual commercial use |
+| Are closed/open assets and activity cues good enough? | Proven teacher prototype; prepared presenter still requires coverage; no advanced lip-sync dependency | M0 teacher review; M3 presenter and seven-pair rendering |
 | Which Node.js/Next.js/Remotion/browser/native-media versions form a compatible package? | Pin together after validating current support on development and candidate production OS | M0 / before implementation baseline is locked |
 | What are practical render capacity, memory/disk, deadlines and worker host? | Proposed single render slot; no host chosen | M0 measurement, private tests, M6 selection |
 | What exact user/service limits and reset periods are sustainable? | Backend-configurable requests/attempts/storage/reservations; no fixed free-video count | M0 evidence, private tests and release configuration |
@@ -757,11 +757,11 @@ M0 evidence proves the video path, not the entire multi-user release. M1–M4 ad
 
 Architecture consistency review must confirm: exactly three types/styles with the approved matrix; four stages; English only; 62–90-second MP4s/default 75; simple cartoons; Gemini/ElevenLabs/Remotion; multi-user signup without confirmation; current-state private access; durable bounded jobs; measured configurable limits; precise pause/restriction semantics; recoverable account deletion; local/private/public separation; no code execution from model output; no broker/admin/payment/provider expansion.
 
-This document is the architecture baseline for later tasks. M0 prototype execution, database/API designs and application implementation remain unstarted by this work. Only `SYSTEM_ARCHITECTURE.md` is created; `PRD.md` remains unchanged.
+This document remains the architecture baseline for later tasks. The v1.1 revision changes only milestone evidence timing to align with approved PRD v2.4; it does not implement database/API designs, application features or a new infrastructure choice.
 
 ## 25. Official technical references
 
-Technical integration references reviewed on 18 October 2026. They support feasibility/constraints, while PRD v2.3 remains the source of requirements. Recheck selected versions, plans and provider terms at implementation/release; no live service configuration was changed.
+Technical integration references reviewed on 18 October 2026. They support feasibility/constraints, while PRD v2.4 remains the source of requirements. Recheck selected versions, plans and provider terms at implementation/release; no live service configuration was changed. Architecture v1.1 clarifies only the owner-approved milestone split; selected technologies and boundaries are unchanged.
 
 1. [Supabase SSR session integration with Next.js](https://supabase.com/docs/guides/auth/server-side/nextjs)
 2. [Supabase Storage access controls and privileged-access boundaries](https://supabase.com/docs/guides/storage/security/access-control)

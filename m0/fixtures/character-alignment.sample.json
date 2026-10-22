@@ -1,0 +1,10 @@
+{
+  "description": "Invented offline character alignment sample; not provider output or measured speech.",
+  "text": "Hi, class! Hi.",
+  "alignment": {
+    "characters": ["H", "i", ",", " ", "c", "l", "a", "s", "s", "!", " ", "H", "i", "."],
+    "character_start_times_seconds": [0.18, 0.26, 0.33, 0.38, 0.52, 0.6, 0.68, 0.76, 0.84, 0.92, 1.02, 1.18, 1.26, 1.34],
+    "character_end_times_seconds": [0.26, 0.33, 0.38, 0.38, 0.6, 0.68, 0.76, 0.84, 0.92, 0.97, 1.02, 1.26, 1.34, 1.39]
+  },
+  "audioDurationSeconds": 1.72
+}

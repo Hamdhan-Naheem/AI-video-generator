@@ -1,0 +1,93 @@
+# AI Video Creator V1 — M1 Application Foundation implementation plan
+
+**Status:** Planning Prepared; M1 Not Started. Prepared 21 October 2026 (Asia/Colombo) after formal owner approval of M0. This document authorizes no code, dependency installation, account setup, migration, service activation or paid use. Start each implementation phase only under a later explicit M1 request.
+
+**Authority:** Approved [PRD.md](PRD.md) v2.4 §§6, 11–13, 21–23, 28.2, 29–30; [SYSTEM_ARCHITECTURE.md](SYSTEM_ARCHITECTURE.md) v1.1 §§2–7, 18–19, 23; [ROADMAP.md](ROADMAP.md) M1. Requirements and architecture remain unchanged. The PRD §23 matrix remains the release authority; passing an M1 subset will not pass all 63 acceptance rows. [PROGRESS.md](PROGRESS.md) records actual results.
+
+## 1. M1 scope and boundaries
+
+M1 builds the **local multi-user application foundation**: a shared TypeScript codebase with Next.js App Router/React/Tailwind for the web process, a distinct Node.js worker process boundary for later jobs, and development-only Supabase Auth, PostgreSQL with RLS, and private Storage integration. Use compatible pinned versions selected during implementation; the architecture fixes system boundaries, not a new package version or concrete SQL/API contract here. No AI work runs in a web request or in the M1 worker boundary.
+
+Within this foundation, M1 implements email/password signup with mandatory confirmation disabled and immediate own-dashboard access; login/logout, separate email-link password recovery, session refresh/expiry and protected-route checks. It creates the initial owner-scoped account/project/draft/asset/lifecycle/job-control data foundations and migrations with RLS, a private dashboard and project creation, minimal account settings, acknowledged conflict-safe draft saving, and private source-upload staging with owner-scoped access, bounds, validation state, failed-upload cleanup and recovery. It tests two ordinary independent accounts against direct API, database and Storage paths before exposing private data. Passwords and reset tokens stay in Supabase Auth and are never stored in project tables or logs.
+
+The M1 project workspace may show **foundation states only**. Gemini understanding, source-grounded PDF/DOCX/image processing, seven-pair planning and immutable plan approval belong to M2; all three voice presets, real generation, leases/worker restart and private MP4 publication belong to M3; full four-stage behavior, preview/download, duplication, account deletion, quotas and operational controls belong to M4; the complete matrix and private multi-account end-to-end validation belong to M5. M1 records any necessary schema foundations without presenting those later behaviors as working. The M0 local video harness remains intact and separate.
+
+## 2. Sequential, reviewable implementation phases
+
+Each phase ends with a reviewable local result and a progress update. A later phase depends on its predecessor's security checks, not just a rendered page. Phase numbering is a plan, not a claim of completion.
+
+### M1.1 — Local application and configuration boundary
+
+- **Objective and tasks:** Establish the shared TypeScript application structure, Next.js App Router/React/Tailwind shell, lightweight Route Handler boundary, separate nonprocessing Node.js worker entry boundary, local development commands and environment-specific configuration contracts. Keep the M0 harness and its pins working. Define server-only versus public configuration and a development Supabase project identity check; record version and migration strategy without connecting production resources.
+- **Dependencies and deliverables:** A separately authorized implementation turn; compatible packages and a development Supabase project/configuration if later approved. Deliver a locally starting app shell, distinct process commands and documented configuration names with no values or secret exposure. Do not place provider credentials in browser or renderer bundles.
+- **Tests and stopping point:** Local type/build checks, web/worker process-boundary inspection, a public-bundle secret scan and missing/wrong-environment configuration failure checks. Stop after the shell starts locally and no private user data or authenticated endpoints are exposed. Review before M1.2.
+- **Security:** No service-role credentials in the browser, no production connection from local processes, no AI calls, no long render in Route Handlers.
+
+### M1.2 — Authentication, sessions and account-state guard
+
+- **Objective and tasks:** Configure development Supabase Auth for email/password signup without mandatory confirmation or an owner allowlist. Create the minimal versioned account/profile/current-state migration needed for idempotent provisioning and guards; M1.3 adds project/asset foundations. Implement Sign Up, Log In, Log Out, Forgot Password and Reset Password; SSR-compatible session verification/refresh on protected pages and Route Handlers; idempotent initial account/profile provisioning; minimal account-state checks; password policy, generic recovery acknowledgement and provider/server throttling. Recovery must remain distinct from signup.
+- **Dependencies and deliverables:** M1.1 and an approved development Supabase setup with test email recovery/redirects. Deliver protected empty dashboard access for two independent test accounts; no other user's data visible or reused. Use authenticated user IDs, never email matches or client-supplied owner IDs, as identity.
+- **Tests and stopping point:** Register A and B without confirmation, verify immediate separate sessions; valid/invalid login; logout and direct protected URL/API denial; refresh and expired-session behavior; generic recovery response, valid/expired/used reset links; weak passwords and repeated/direct auth requests. Inspect configuration for disabled signup confirmation and excluded OTP/MFA/social/phone/magic-link paths. Stop before introducing project data unless server guards, throttling and session tests pass.
+- **Security:** Server verification on every protected path, no shared caching of private responses, origin/CSRF protection for cookie-authenticated mutations, no passwords/cookies/recovery tokens in logs. Unverified email does not confer ownership of a different user ID; public mailbox-squatting review remains an M5/M6 gate.
+
+### M1.3 — Owner-scoped database, projects and acknowledged drafts
+
+- **Objective and tasks:** Design and apply versioned development PostgreSQL migrations for the minimum account, project, editable draft, source-reference and later job/control/lifecycle foundations required by the approved architecture. Establish RLS, narrow grants and per-operation authorization; no ordinary browser write access to privileged job/control or other-user state. Implement owner-filtered project creation/listing and a minimal dashboard/navigation/account-settings shell. Save drafts with optimistic revisions; show Saved only after durable acknowledgement and give conflicting tabs a recoverable reload/copy-my-edits path.
+- **Dependencies and deliverables:** M1.2 identity/current-state guard and reviewed migration/RLS design. Deliver a private, paginated or bounded project list, creation and draft persistence for A and B, with no AI plan or generated output implied. Only basic project management is in scope; duplication, deletion, full four-stage flow and final media actions remain M4.
+- **Tests and stopping point:** Apply migrations from a clean development database and verify rollback/replay procedure. Directly attempt foreign-ID project/draft reads and mutations through Route Handlers and user-context database access; both must deny. Test anonymous requests, stale sessions, missing profile provisioning, refresh/resume of acknowledged drafts, two-tab conflict and preservation of the prior saved version on failed writes. Stop before upload integration until two-account data isolation and save semantics pass.
+- **Security:** RLS is enforced in the database and repeated at API boundaries; current account state is checked even with a valid token. A privileged server path must derive/verify ownership explicitly. Logs contain neither draft contents nor credentials.
+
+### M1.4 — Private source staging and failed-upload recovery
+
+- **Objective and tasks:** Create private user-scoped Storage staging policies and an owned allocation record. The authenticated browser uploads with its user session to the allocated key; Next.js does not proxy large bytes or allow arbitrary client paths. Enforce coarse upload byte/count/type limits at allocation and Storage, then use a minimal durable local intake task in the separate worker process to verify actual signature and safe bounds before a source is marked usable. This intake task makes no AI call and does not claim M3's general lease/queue system is complete. Record pending/valid/recoverable-failure states, checksum and immutable reference intent. Clean abandoned allocations and failed/orphan objects without deleting another user's or a live referenced asset.
+- **Dependencies and deliverables:** M1.3 project/asset ownership and reviewed Storage policies. Deliver a local private upload path with replacement guidance for malformed, oversize, unsupported or interrupted uploads. PRD §6.3 proposes up to five JPEG/PNG/WebP images at 10 MB/25 megapixels each and one text PDF/DOCX at 10 MB/100 PDF pages; exact parsing, extraction, mixed-page disclosure and source grounding remain M2. M1 must reject unsafe/coarsely invalid input before any costly processing and preserve enough status for later validation/recovery.
+- **Tests and stopping point:** With two accounts, attempt foreign allocation/key reads, writes, overwrites and listing via direct Storage SDK and application APIs; all deny. Test valid staging, wrong path, unsupported signature, size/count boundary, interruption, repeated completion, worker-stop/pending-intake recovery, abandoned allocation cleanup, failed cleanup/retry and referenced-asset safety. Prove bytes remain private and an invalid/pending asset cannot reach planning. Stop before claiming M1 complete unless the failed-upload path recovers without partial publication or leaked objects.
+- **Security:** Private bucket, user-context RLS, server-authorized allocation, no public URLs or service credentials in the browser. Parser expansion/decoding limits must be safely bounded when full extraction arrives in M2; M1 must not label unchecked bytes as understood content.
+
+### M1.5 — Integrated foundation security and handoff
+
+- **Objective and tasks:** Recheck auth/session/current-state, project/draft RLS, API ownership and Storage ownership together. Review migration/grant assumptions, minimal account settings, local web/worker separation and the documented M1 acceptance matrix. Record actual failures and follow-up rather than treating an isolated unit test as multi-account proof.
+- **Dependencies and deliverables:** M1.1–M1.4 passing evidence. Deliver a repeatable local two-account test report, known limitations, M2 handoff interfaces/data contracts and updated README/PROGRESS. No source parsing/AI/generation implementation is introduced by the handoff.
+- **Tests and stopping point:** Repeat direct cross-user API, SQL/RLS and Storage attempts, including stale/expired sessions and failed upload cleanup; inspect that A's project/draft/file operations cannot affect B. Verify basic dashboard and acknowledged save recovery after restart. M1 exit requires the ROADMAP M1 evidence: two independent development accounts can signup/login/recover, see only their own dashboard/drafts/private files, and malformed/failed uploads recover without leakage or partial publication. Stop for owner review before M2.
+- **Security:** No P0 isolation failure is accepted. Later worker, privileged publication, account deletion and full end-to-end tests retain their own milestones.
+
+## 3. M0 code reuse assessment — no migration yet
+
+| Existing M0 area | Potential later use | Boundary before reuse |
+| --- | --- | --- |
+| `m0/src/planning/` Zod schemas, registry, Gemini prompt/adapter and exact-hash manual approval | M2 planning, immutable revisions and worker-gated calls | Recheck type/style, source ownership, versioning and server/worker trust boundaries; the local approval file is not SaaS authorization |
+| `m0/src/narration/` alignment, word/subtitle and timing utilities | M3 narration/caption/scene cue derivation | Pin approved voice/model, normalize safely, bind artifacts to one owner/revision and add durable private checkpoints |
+| `m0/src/video/`, `m0/src/showcase/`, teacher and Remotion compositions | M3 authored layout/render library | Cover all seven compatible type/style pairs, prepared presenter and credential-free bounded worker children; mock showcases are not production templates |
+| Local render/recovery scripts and FFmpeg probe utilities | M3 media validation/restart design; M5 resource regression | Replace local run-directory identity with owned PostgreSQL/Storage checkpoints and durable leases; Phase 6A is process restart, not worker-lease recovery |
+| M0 offline tests and saved fixtures | M2/M3 regression foundation | Add API/RLS/Storage ownership, two-account and durable-job tests rather than interpreting offline fixtures as SaaS acceptance |
+
+M1 preserves these files and assets as-is. No copy, refactor or integration is planned until the responsible later phase can enforce its trust boundary.
+
+## 4. M1 requirement-to-test traceability
+
+The statuses below are **Planned**, not Passed. “M1 evidence” refers to the available foundation behavior; compound V1 criteria keep their later full-matrix tests. Exact test names and SQL policies belong to the implementation reviews.
+
+| PRD requirement | M1 evidence to produce | Later coverage retained |
+| --- | --- | --- |
+| AC01 (P0) signup/session/own dashboard; AC04 (P0) independent signup and excluded auth flows | Two users register with confirmation disabled and immediately reach separate empty dashboards; configuration inspection | M5 repeat in private environment and public-signup review before M6 |
+| AC02 (P0) login/logout/protected access | Valid/invalid login, logout, anonymous/direct protected page and Route Handler denial, expiry/refresh | M5 full journey, stale-session and private-media regression |
+| AC03 (P0) recovery | Generic request response; valid/invalid/expired/used email link, reset then ordinary login | M5 recovery redirect/abuse matrix; M6 production email settings |
+| AC05 (P0) password/throttling | Weak-password and repeated/direct signup/login/recovery attempts; inspect provider/server limits | M5 unverified-email, mailbox-squatting, account-enumeration and multi-account-abuse review; M6 release configuration |
+| AC06 (P0) ownership and account-state isolation | Two-account direct API, user-context DB/RLS and Storage foreign-ID attempts for M1 projects/drafts/assets; stale-session/current-state denial | M3/M4 add jobs/artifacts/duplicate/delete/download; M5 repeats every operation in AC06 |
+| AC15 (P0) upload limits and recoverable invalid input | Allocation/Storage count, byte, type/path and initial signature bounds; pending/invalid/retry/cleanup evidence | M2 completes PDF/DOCX/image decoding, expansion, pages, scans and text/context limits; M5 regression |
+| AC34 (P0) acknowledged autosave/conflicts | Durable Saved acknowledgement, refresh/resume, two-tab optimistic conflict and failed-write preservation for basic drafts | M4 four-stage navigation/autosave integration; M5 multi-tab journey |
+| AC43 (P0) independent users' complete workspaces | M1 subset: A/B project, draft and upload isolation under direct operations and failure | M3/M4 generation/revision/duplicate/delete/download; M5 full two-user criterion |
+| AC63 (P0) preserve acknowledged content | Failed write/upload and draft restart preserve prior acknowledged project/draft and valid private asset | M2–M5 extend to refinement, duplication, jobs, quotas and previous videos |
+| AC08 (P0), AC59 (P1) navigation/usability | M1 dashboard and basic navigation/labels/keyboard checks only | M4 complete four stages and responsive accessibility; M5 full journeys |
+| AC38 (P0), AC48–AC51 (P0), AC52/AC54–AC58 (P0) | M1 ownership/lifecycle/control schema foundations only; no claim of functional preview/download, deletion, quota or operator controls | M3 private publication; M4 full behaviors; M5 direct/failure regression |
+
+M1 completion is not a waiver of any other AC row. PRD v2.4 contains AC01–AC63, including **47 P0** rows; all remain intact. The M0 proof satisfies the local part of AC42, while release gates stay open.
+
+## 5. Development cost, environment and owner decisions
+
+- **Local/free-first:** Develop locally, use a separate development Supabase project only after authorization and confirm available plan capacity before account creation. No production Supabase/Vercel/worker host, billing, upgrade or provider generation is part of this plan. Do not change the current root `.env` for planning. Future implementation must keep development and production data, credentials, URLs and queues separate.
+- **External prerequisites for later authorized implementation:** a development Supabase project with Auth/PostgreSQL/private Storage and password-recovery email/redirect configuration; a chosen local web origin; compatible Next.js/Supabase SSR package versions and a migration procedure. Production hosting, commercial AI rights and worker host are M6 decisions. If free allowances or a necessary recovery-email capability prove insufficient, report the specific constraint and options before paid activation or product-scope change.
+- **Owner decision required to start:** Explicitly authorize the first M1 implementation phase and any development Supabase account/configuration work. No approval is required now for a new product feature; this plan follows existing PRD/architecture. Review any material package/transport/security conflict before implementation rather than silently changing the approved design.
+- **Outstanding P2:** Numeric reviewer speech/readability/distraction scores (AC60) and pilot comprehension results (AC62) remain **Not Verified — P2 evidence outstanding** after M0 sign-off. Existing ROADMAP M5 quality/private testing is their traceable collection point. AC61 core coherence and every release P0 remain mandatory. Existing Free-plan Bella recordings remain noncommercial prototypes; a later paid subscription does not retroactively license them.
+
+**Stop here:** M1 is **Not Started / Planning Prepared**. The owner must separately authorize M1 coding and service setup.

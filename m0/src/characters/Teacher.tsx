@@ -1,18 +1,27 @@
 import {useCurrentFrame} from 'remotion';
 
-// Original shape-based teacher. Frame cues are deliberately synthetic in Phase 1.
-export const Teacher = () => {
+// The standalone Phase 1 demo retains its synthetic cues. Storyboard scenes pass
+// a speech cue derived from saved alignment and explicitly control gestures.
+export const Teacher = ({speechOpen, gesture, animateBlink = true, animateHead = true, width = 500, height = 760}: {
+  speechOpen?: boolean;
+  gesture?: 'wave' | 'point' | 'rest';
+  animateBlink?: boolean;
+  animateHead?: boolean;
+  width?: number;
+  height?: number;
+} = {}) => {
   const frame = useCurrentFrame();
-  const blink = frame % 83 >= 39 && frame % 83 <= 42;
-  const mouthOpen = [[14, 32], [49, 69], [102, 124], [151, 165]].some(
+  const blink = animateBlink && frame % 83 >= 39 && frame % 83 <= 42;
+  const syntheticMouth = [[14, 32], [49, 69], [102, 124], [151, 165]].some(
     ([start, end]) => frame >= start && frame <= end,
   );
-  const wave = frame >= 18 && frame <= 70;
-  const headY = Math.sin(frame / 16) * 5;
-  const armAngle = wave ? -15 + Math.sin(frame / 4) * 12 : 8;
+  const mouthOpen = speechOpen ?? syntheticMouth;
+  const wave = gesture === undefined ? frame >= 18 && frame <= 70 : gesture === 'wave';
+  const headY = animateHead ? Math.sin(frame / 16) * 5 : 0;
+  const armAngle = gesture === 'point' ? -45 : wave ? -15 + Math.sin(frame / 4) * 12 : 8;
 
   return (
-    <svg width="500" height="760" viewBox="0 0 500 760" role="img" aria-label="Original cartoon teacher">
+    <svg width={width} height={height} viewBox="0 0 500 760" role="img" aria-label="Original cartoon teacher">
       <ellipse cx="250" cy="728" rx="170" ry="23" fill="#102846" opacity="0.24" />
       <path d="M125 475 Q90 510 85 705 L416 705 Q408 520 375 475 Z" fill="#206794" />
       <path d="M221 453 L250 581 L279 453" fill="#eef9f9" />
