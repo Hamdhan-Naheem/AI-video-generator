@@ -37,6 +37,8 @@ video-output/
 output/
 .remotion/
 .m0-runs/
+m0/runs/
+public/m0-phase4a-audio.wav
 *.mp4
 *.mov
 *.webm

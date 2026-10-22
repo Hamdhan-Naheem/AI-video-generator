@@ -4,10 +4,10 @@
 
 | Item | Value |
 | --- | --- |
-| Architecture version | 1.0 |
-| Date | 18 October 2026, Asia/Colombo |
-| Requirements authority | [PRD.md](./PRD.md), approved V1 / document v2.3 |
-| Status | Architecture baseline; feasibility-dependent settings explicitly identified |
+| Architecture version | 1.2 (owner-authorized UX/profile/approval alignment) |
+| Date | 22 October 2026, Asia/Colombo |
+| Requirements authority | [PRD.md](./PRD.md), V1 / document v2.5, owner-approved decisions recorded; revised document pending review |
+| Status | Updated architecture document pending owner review; existing technical boundaries preserved |
 | Intended use | Guide M0 planning and later multi-user implementation/design |
 | Work performed here | Documentation only; no implementation, prototype, schema migrations, API specifications, deployments or service activation |
 
@@ -32,11 +32,11 @@ The complete product is a multi-user SaaS, developed locally, tested privately w
 | --- | --- |
 | Video types | Product Video, Educational Video, Project Explainer |
 | Presentation styles | Animated Explainer, Cartoon Teacher, Cartoon Presenter |
-| Creation stages | Describe → Review Script → Generate and Preview → Download |
+| Studio steps | Video Details → Script & Storyboard → Voice & Subtitles → Generate Video → Preview & Download |
 | Language | English narration/subtitles; three English voice presets |
 | Output | Vertical 9:16 H.264/AAC MP4, 62–90 seconds inclusive, default requested target 75 seconds |
 | Cartoon capability | Prepared 2D teacher/presenter; speech-reactive mouth, pause closure, blinking, subtle head motion and limited gestures |
-| Authentication | Supabase email/password signup, immediate own-dashboard access, confirmation disabled; login/logout and separate email-link recovery |
+| Authentication and basic settings | Supabase email/password credentials; full-name/confirmation/legal-acknowledgement signup form, immediate own-dashboard access without email confirmation; login/logout, separate recovery, editable own full name/read-only email and secure authenticated password change |
 | Lifecycle/safety | Private files, approvals, recoverable jobs, limits, project/account deletion, backend-only pause/restriction |
 
 Preserve the compatibility matrix exactly:
@@ -48,6 +48,8 @@ Preserve the compatibility matrix exactly:
 | Project Explainer | Yes | No | Yes | Animated Explainer |
 
 One teacher and one presenter are proposed initial assets, selected automatically by style. Their registry is extensible; a large library or manual character editor is not needed.
+
+Exactly five user-facing steps share one Studio layout and wizard. Step 2 records explicit approval of the current script/scenes; Step 3 chooses voice/subtitles; Step 4 separately confirms the complete current immutable generation configuration before full narration/rendering. No sixth step is introduced. UI step count does not prescribe backend services, task kinds, project/job states or independently deployed pages. PostgreSQL/worker execution stages below remain unchanged.
 
 ### 2.2 System invariants
 
@@ -112,7 +114,7 @@ No public HTTP callback into the worker is required. The worker polls PostgreSQL
 
 | Component | Owns | Communicates with | Does not do |
 | --- | --- | --- | --- |
-| Browser / React / Tailwind | Four-stage UX, inputs, scene cards, previews, save/progress messages, deletion confirmation | Next.js, Supabase Auth, permitted Storage upload/download capabilities | Hold provider/service secrets, decide quota/ownership, execute AI code |
+| Browser / React / Tailwind | Five-step Studio UX, inputs, scene cards, previews, save/progress messages, deletion confirmation | Next.js, Supabase Auth, permitted Storage upload/download capabilities | Hold provider/service secrets, decide quota/ownership, execute AI code |
 | Next.js server | Verified request identity, workspace access, validated mutations, approval, upload admission, job submission/status, link issuance, deletion acceptance | Auth, user-scoped PostgreSQL operations, Storage | Long rendering or detached background work after responding |
 | Supabase Auth | Password identities, sessions, password recovery and privileged Auth deletion | Auth clients and authorized backend | Authorize project ownership or replace application lifecycle flags |
 | PostgreSQL | Durable state, RLS, revisions/approvals, transactional admission/reservations, job leases, controls and cleanup metadata | Next.js and worker | Make provider HTTP calls inside long database transactions |
@@ -122,7 +124,7 @@ No public HTTP callback into the worker is required. The worker polls PostgreSQL
 | ElevenLabs adapter | Three voices, samples, approved narration/audio/timing | ElevenLabs through worker | Choose visual meaning or guarantee phoneme lip-sync |
 | Remotion / local utilities | Authored graphics, captions, cartoons, render and media inspection | Local validated materialized assets and coordinator | Fetch arbitrary model URLs, receive service credentials or render inside Vercel |
 
-All application AI operations use durable worker tasks, including short ideas, script refinement and voice samples. This standardizes usage accounting, failure recovery and restriction checks. The UI still shows these tasks within Describe/Review; they are not new creation stages. A future short-call optimization is unnecessary for V1.
+All application AI operations use durable worker tasks, including short ideas, script refinement and voice samples. This standardizes usage accounting, failure recovery and restriction checks. The UI still shows these tasks within Video Details, Script & Storyboard and Voice & Subtitles; they are not new creation stages. A future short-call optimization is unnecessary for V1.
 
 ## 4. Minimal M0 architecture versus the complete SaaS
 
@@ -148,7 +150,7 @@ flowchart LR
 
 | Capability | Minimal M0 | Complete multi-user SaaS |
 | --- | --- | --- |
-| Interface | Local runner plus manual plan approval and local playback; no mandatory dashboard | Next.js account screens, dashboard and four-stage UI |
+| Interface | Local runner plus manual plan approval and local playback; no mandatory dashboard | Next.js account screens, dashboard and shared five-step Studio |
 | Identity | Controlled developer execution with nonconfidential test content | Independent Supabase accounts, RLS and lifecycle-aware access |
 | Input | Known electricity topic and prepared teacher/diagram assets | All approved text/image/document sources and understanding review |
 | Planning | Gemini script/scene generation and schema validation | All three types/styles, ideas/refinements, immutable revisions and approval |
@@ -165,7 +167,7 @@ M0 checkpoint writes are atomic, record completed-stage hashes and never overwri
 
 Produce and inspect the real MP4, validated plan, approved narration text, audio/normalized alignment, scene/caption/character tracks, output metadata and stage measurements. Demonstrate a teacher opening/closing, a teacher-plus-diagram scene and a visual-only explanation. Test pause closure, blinking/head motion and a supported gesture. Check subtitle-off rendering reuses audio and a failed render resumes without repeating successful synthesis.
 
-For target 75, the PRD's current fit window is 72–78 seconds inside hard 62–90 bounds. Proposed settings remain 1080 × 1920, 30 fps, H.264/AAC. Record CPU/RAM, elapsed/queue/stage time, disk/output size and Gemini/ElevenLabs units plus rendering/storage/bandwidth estimates. Additional M0 feasibility checks cover the three voice presets, presenter assets, duration boundaries, supported combinations and parser limits; these do not require a finished SaaS UI.
+For target 75, the PRD's current fit window is 72–78 seconds inside hard 62–90 bounds. Proposed settings remain 1080 × 1920, 30 fps, H.264/AAC. Record CPU/RAM, elapsed/queue/stage time, disk/output size and Gemini/ElevenLabs units plus rendering/storage/bandwidth estimates. M0 additionally requires an injected failure during local rendering, process restart from saved approved assets without new provider requests, stronger narration/scene/subtitle/visual-anchor checks, subtitle-on/off behavior and offline duration-boundary tests. The three-voice, presenter, seven-combination, source/parser, real 62/90-second output, durable worker, private upload and multiuser checks follow PRD v2.5 §§28.2 and 30 in M1–M5. Local-process recovery does not satisfy durable worker lease recovery.
 
 Functional/unsafe failures block feasibility. Proposed millisecond/reviewer/performance targets are measured as P2, not automatic blockers. If basic cartoon quality fails, record limitations and options; do not silently add Rhubarb or paid avatar services. M0 execution and any paid usage require their own later authorization; this document does not start them.
 
@@ -197,6 +199,10 @@ Share compatible domain rules between web/worker, but enforce them again at trus
 ### 6.1 Signup, login and recovery
 
 Use the supported Supabase SSR integration for Next.js session handling and refresh. Email/password signup has confirmation disabled in development, test and production; a healthy signup returns a session and opens the user's empty dashboard. Email reset links remain a separate recovery path. No OTP, MFA, social/phone login, magic-link login or owner allowlist.
+
+The signup UI collects Full Name, Email Address, Password, matching Confirm Password and Terms/Privacy acknowledgement. Full Name is limited editable profile data anchored to the verified user ID; it never determines ownership or operator authority. Confirm Password is validated before submission and is never persisted; Supabase remains responsible for credentials, and application storage/logs must not contain plaintext passwords. Legal links, a required affirmative interaction and an acknowledgement record are separate: legal content, interaction requirement and recording/retention decisions remain for owner review before affected implementation. No consent schema/API is defined here.
+
+Basic Account Settings permits an authorized eligible user to edit/save their own Full Name, view read-only account email and invoke secure authenticated password change through Supabase, with reauthentication where required by the validated provider flow. Recheck identity/current state, apply password safeguards and verify actual session effects without assuming immediate revocation of every token. Preserve separate Forgot Password/Reset Password. No existing password is retrieved or displayed. M1 aligns these limited profile/auth responsibilities; M4 retains complete lifecycle controls and mandatory deletion. Photos, public profiles, roles, organizations, teams, billing and advanced preferences are excluded.
 
 Validate identity server-side on protected pages and Route Handlers rather than trusting a cookie payload or browser session flag. Session verification and refresh follow the installed compatible Supabase/Next.js versions; version-specific middleware/proxy naming is not fixed here. A valid JWT is not proof that the account is currently allowed to generate or read deleted data. [Supabase SSR guidance](https://supabase.com/docs/guides/auth/server-side/nextjs).
 
@@ -281,15 +287,15 @@ The coordinator resolves authorized object IDs, downloads bounded validated mate
 
 ### 8.1 Planning data flow
 
-1. The user saves a description and optional validated source references within Describe.
+1. The user saves a description and optional validated source references within Video Details.
 2. Next.js checks state/ownership and reserves the applicable idea/script allowance before recording a durable planning task. Restricted/deleting users cannot create or run it.
 3. The worker reads only those owned sources, extracts bounded text/derivatives, and preserves source/page references and incomplete-extraction warnings.
 4. For long supported content, it summarizes bounded sections then combines them with sufficient evidence to expose conflicts. It reserves/checks model tokens for input, instructions and output rather than treating 60,000 characters as a context guarantee.
 5. Gemini receives minimized content, the chosen type/style, audience/target, confirmed facts and a bounded list of supported templates/actions. It does not receive credentials, unrestricted storage URLs or another user's data.
 6. The worker validates the structured response and registry/ownership semantics, then conditionally saves the resulting draft revision. A late planning response cannot overwrite newer user edits.
-7. Review Script displays understanding, unresolved facts, narration, visual descriptions and character appearances. Corrections/refinement repeat planning with new task identity and quota checks; no full narration is synthesized before approval.
+7. Script & Storyboard displays understanding, unresolved facts, narration, visual descriptions and character appearances. Corrections/refinement repeat planning with new task identity and quota checks; no full narration is synthesized before explicit current script approval and separate final generation confirmation.
 
-Use Gemini schema-constrained responses where supported, followed by server-side Zod and semantic checks. Provider schema support does not establish truth, authorization or compatibility. Model/version and supported schema subset are M0 decisions. [Gemini structured output](https://ai.google.dev/gemini-api/docs/structured-output).
+Use Gemini schema-constrained responses where supported, followed by server-side Zod and semantic checks. Provider schema support does not establish truth, authorization or compatibility. M0 validated one planning path; source-grounded image/long-document model and schema coverage is an M2 decision. [Gemini structured output](https://ai.google.dev/gemini-api/docs/structured-output).
 
 ### 8.2 Controlled scene plan
 
@@ -309,15 +315,16 @@ Uploaded instructions are untrusted source material. They cannot change system p
 
 Editable drafts use optimistic revision checks; acknowledge Saved only after durable success. A conflicting tab receives reload/copy-my-edits guidance rather than overwriting another acknowledged version. AI regeneration saves a new version only on success and retains a restore-previous path.
 
-Approval freezes source identities/checksums, narration and scene plan, type/style, character/template/schema versions, voice/model/settings, subtitles and target. Generate references that immutable approval. An approval hash is an integrity/cache identity, not a substitute for user authorization. The backend rechecks it and ownership at submission.
+Step 2 script/storyboard approval identifies the exact current content and scene plan, but alone authorizes no full narration/rendering. After Step 3 settings selection, Step 4 requires a separate explicit final generation confirmation. Its immutable snapshot includes the current content approval, source identities/checksums, narration/scenes, type/style, character/template/schema versions, voice/model/settings, subtitles and target. The backend checks both decisions, identity/current eligibility and ownership before idempotent admission. An approval hash is an integrity/cache identity, not authorization. Earlier user-initiated planning and eligible short samples keep their existing separate request/usage controls; they are not full generation authorized by preliminary script approval.
 
 | Change | Consequence |
 | --- | --- |
-| Spoken text or voice/settings | Reapprove; regenerate audio/alignment and dependent timeline/render |
-| Source facts/type/semantic scene plan | Review understanding/scenes again; reuse audio only when approved spoken content/settings are identical |
-| Character/style | Revalidate compatibility, review/reapprove; rebuild scenes/character cues/render, keep compatible audio |
-| Subtitle visibility or supported visual treatment | Confirm updated revision in the same Review stage; render-only reuse if narration/cues stay valid |
-| Requested duration | Revalidate fit/timeline; reuse audio only if it satisfies the new target window |
+| Spoken text | Invalidate affected Step 2 content approval and Step 4 final confirmation; regenerate audio/alignment and dependent work after explicit reapproval |
+| Voice/settings | Invalidate final confirmation and affected audio/timeline/render; unchanged script approval may remain valid |
+| Source facts/type/semantic scene plan | Review understanding/scenes and final configuration again; reuse audio only when approved spoken content/settings are identical |
+| Character/style | Revalidate compatibility, content/scene approval and final confirmation; rebuild scenes/character cues/render, keep compatible audio |
+| Subtitle visibility or supported visual treatment | Confirm the updated settings/revision in Steps 3–4; invalidate affected visual approval as needed; render-only reuse if narration/cues stay valid |
+| Requested duration | Revalidate fit and affected content approval, then final confirmation; reuse audio only if it satisfies the new target window |
 
 Reuse is scoped to the same user and matching versions/content/settings. Do not cross-user deduplicate private speech/text merely because a hash matches. Newer revisions do not mutate running snapshots; older completion can remain attached to its own revision but cannot become the current result for a different edit. Keep the previous successful video labeled accurately while replacement work fails or waits.
 
@@ -334,7 +341,7 @@ sequenceDiagram
     participant E as ElevenLabs
     participant R as Remotion child
     participant S as Private Storage
-    U->>W: Generate approved revision with submission identity
+    U->>W: Step 4: final confirmed configuration and content approval with submission identity
     W->>D: Atomic eligibility, approval, idempotency and quota admission
     D-->>W: Existing or newly committed durable job
     W-->>U: Accepted job and user-scoped status
@@ -356,7 +363,7 @@ sequenceDiagram
     W-->>U: Authorized short-lived media access
 ```
 
-Gemini planning occurs before this sequence. Reusing already validated audio skips ElevenLabs; it is not a new synthesis request. A duration-fit problem requiring different wording returns to Review rather than rendering an unapproved script.
+Gemini planning occurs before this sequence. Reusing already validated audio skips ElevenLabs; it is not a new synthesis request. A duration-fit problem requiring different wording returns to Script & Storyboard and final confirmation rather than rendering an unapproved script.
 
 ### 10.2 Checkpoints and final commit
 
@@ -445,7 +452,7 @@ stateDiagram-v2
 
 This diagram shows principal transitions, not every stage-specific failure edge. Any stage can enter bounded retry, Needs Attention, failed or cancelled according to the classified failure/control policy. Restriction is checked at every safe boundary, not only composing. Account deletion has its own durable task/lifecycle; it is not a video job becoming failed.
 
-Dashboard states remain Draft, Generating, Ready and Needs Attention. Held work displays Generating with an explicit Paused/Restricted reason. Current draft/revision status and the previous successful video remain distinct. Polling only exposes owned job data, never queue contents or other users' identifiers.
+Dashboard states remain Draft, Generating, Ready and Needs Attention. Friendly UI labels are presentation mappings, not new database enums: Awaiting Review indicates a pending content/final decision on the current revision under its actual project state; Queued reflects a queued job; Processing an active job; Completed means succeeded/verified Ready; Failed describes a failed attempt or Needs Attention without erasing a previous valid output. Held work displays Generating with an explicit Paused/Restricted reason rather than a false active stage. Current draft/revision status and the previous successful video remain distinct. Polling only exposes owned job data, never queue contents or other users' identifiers.
 
 ### 12.3 Coordinator and process isolation
 
@@ -478,7 +485,7 @@ Manual retries are bounded by configured limits, scope to the failed attempt and
 
 ### 14.1 What is limited
 
-Backend configuration covers per-user video attempts/totals, idea/script/regeneration/refinement requests, voice samples, simultaneous outstanding video jobs, file/storage allowances, and shared provider rate/usage ceilings. Limit periods and numbers follow M0/private-test measurements of Gemini, ElevenLabs, rendering, storage and bandwidth. There is no fixed free-video count, pricing-plan model or customer budget form.
+Backend configuration covers per-user video attempts/totals, idea/script/regeneration/refinement requests, voice samples, simultaneous outstanding video jobs, file/storage allowances, and shared provider rate/usage ceilings. Limit periods and numbers follow M0 local/provider evidence and M1–M5 private storage, bandwidth and workload measurements. There is no fixed free-video count, pricing-plan model or customer budget form.
 
 The browser can display a limit message but cannot grant quota. Held/retry jobs retain correct outstanding-slot accounting. Samples and long-document chunks consume their own applicable allowance; they cannot bypass video admission restrictions through a different endpoint.
 
@@ -528,7 +535,7 @@ An authenticated owner confirms deletion of their own project. Atomically mark i
 
 ### 16.2 Account deletion workflow
 
-Account Settings provides one explicit confirmed action. The backend derives its subject from verified identity; no body-supplied owner ID can delete another account. A confirmed request durably changes lifecycle and creates/reuses an independent cleanup task before acknowledging acceptance.
+Account Settings provides a separately placed Delete Account action alongside the limited profile/password controls. It requires explicit destructive confirmation, then truthful accepted/in-progress, completed, or incomplete/recovery states; missing Stitch deletion visuals do not remove this mandatory feature. The backend derives its subject from verified identity; no body-supplied owner ID can delete another account. A confirmed request durably changes lifecycle and creates/reuses an independent cleanup task before acknowledging acceptance.
 
 ```mermaid
 sequenceDiagram
@@ -575,9 +582,9 @@ Keep relational truth in PostgreSQL and private large bytes in Storage; local sc
 
 | Record family | Relation and architectural rule |
 | --- | --- |
-| Identity/profile/lifecycle | Supabase user ID anchors ownership; lifecycle check independent of JWT; no required signup activation |
+| Identity/profile/lifecycle | Supabase user ID anchors ownership; editable full name/read-only email are limited profile data, never authority; provider owns password changes; lifecycle check independent of JWT; no required signup activation; legal acknowledgement recording unresolved |
 | Project/draft | User-owned mutable working content, save version and resume stage; separate from output status |
-| Revision/approval | Immutable source/settings/plan snapshot with exact user approval; reused only under matching semantics |
+| Revision/approval | Exact script/scene approval plus separate final immutable content/asset/settings confirmation; reused only under matching ownership and semantics |
 | Asset/reference | Immutable owned byte identity and same-user references; built-ins live in a separate trusted registry |
 | Task/attempt/lease | User/project/revision association, task kind, current stage, retry/lease history and environment |
 | Timing/render artifacts | Versioned audio/alignment/text mappings, captions, scene/character tracks and verified output metadata |
@@ -702,9 +709,9 @@ Selected architectural decisions describe implementation direction, not evidence
 
 | Question | Current position | Resolve when |
 | --- | --- | --- |
-| Which Gemini model/schema subset handles images, long summaries and plans reliably? | Configurable image-capable model; no unverified model/version pin | M0 |
-| Which three ElevenLabs voices/model provide acceptable English timing and permitted use? | Existing provider only; test samples/normalization/availability | M0, rights confirmed before actual commercial use |
-| Are closed/open assets and activity cues good enough? | One prepared teacher/presenter; no advanced lip-sync dependency | M0 full-video review, including quiet speech and pauses |
+| Which Gemini model/schema subset handles images, long summaries and plans reliably? | Configurable image-capable model; no unverified model/version pin | M2 source-grounded planning |
+| Which three ElevenLabs voices/model provide acceptable English timing and permitted use? | Existing provider only; test samples/normalization/availability | M3 before voice use; rights confirmed before actual commercial use |
+| Are closed/open assets and activity cues good enough? | Proven teacher prototype; prepared presenter still requires coverage; no advanced lip-sync dependency | M0 teacher review; M3 presenter and seven-pair rendering |
 | Which Node.js/Next.js/Remotion/browser/native-media versions form a compatible package? | Pin together after validating current support on development and candidate production OS | M0 / before implementation baseline is locked |
 | What are practical render capacity, memory/disk, deadlines and worker host? | Proposed single render slot; no host chosen | M0 measurement, private tests, M6 selection |
 | What exact user/service limits and reset periods are sustainable? | Backend-configurable requests/attempts/storage/reservations; no fixed free-video count | M0 evidence, private tests and release configuration |
@@ -755,13 +762,13 @@ The approved PRD's P0/P1/P2 model is preserved. Every P0 criterion blocks public
 
 M0 evidence proves the video path, not the entire multi-user release. M1–M4 add accounts/storage/content/job/lifecycle functions; M5 proves local/private isolation/recovery/quality; M6 establishes production configuration/licensing/monitoring and independent worker readiness. No deadlines or hosting subscriptions are committed here.
 
-Architecture consistency review must confirm: exactly three types/styles with the approved matrix; four stages; English only; 62–90-second MP4s/default 75; simple cartoons; Gemini/ElevenLabs/Remotion; multi-user signup without confirmation; current-state private access; durable bounded jobs; measured configurable limits; precise pause/restriction semantics; recoverable account deletion; local/private/public separation; no code execution from model output; no broker/admin/payment/provider expansion.
+Architecture consistency review must confirm: exactly three types/styles with the approved matrix; exactly five shared-layout Studio steps; English only; 62–90-second MP4s/default 75; simple cartoons; Gemini/ElevenLabs/Remotion; multi-user signup without confirmation; current-state private access; durable bounded jobs; measured configurable limits; precise pause/restriction semantics; recoverable account deletion; local/private/public separation; no code execution from model output; no broker/admin/payment/provider expansion.
 
-This document is the architecture baseline for later tasks. M0 prototype execution, database/API designs and application implementation remain unstarted by this work. Only `SYSTEM_ARCHITECTURE.md` is created; `PRD.md` remains unchanged.
+Version 1.1 (21 October 2026) clarified milestone evidence timing under PRD v2.4. Version 1.2 (22 October 2026) records the owner-authorized five-step Studio, two approval decisions and limited signup/profile/password alignment under PRD v2.5. The updated document remains pending owner review; the selected technical topology, RLS/private media, durable jobs, retries and deletion boundaries are preserved. No database/API design, application feature or infrastructure was implemented.
 
 ## 25. Official technical references
 
-Technical integration references reviewed on 18 October 2026. They support feasibility/constraints, while PRD v2.3 remains the source of requirements. Recheck selected versions, plans and provider terms at implementation/release; no live service configuration was changed.
+Technical integration references reviewed on 18 October 2026. They support feasibility/constraints, while current PRD v2.5 records the source requirements and owner-authorized alignment. Recheck selected versions, plans and provider terms at implementation/release; no live service configuration was changed. The v1.1 milestone clarification is retained; v1.2 adds only the authorized UX/profile/approval responsibilities, with selected technologies and process boundaries unchanged.
 
 1. [Supabase SSR session integration with Next.js](https://supabase.com/docs/guides/auth/server-side/nextjs)
 2. [Supabase Storage access controls and privileged-access boundaries](https://supabase.com/docs/guides/storage/security/access-control)
