@@ -6,7 +6,9 @@ AI Video Creator is a planned multi-user web application for turning a user's id
 
 ## V1 at a glance
 
-- One dashboard; four stages: Describe → Review Script → Generate and Preview → Download.
+- One dashboard; exactly five shared-layout Studio steps: Video Details → Script & Storyboard → Voice & Subtitles → Generate Video → Preview & Download.
+- Separate script/scene approval and final complete-configuration confirmation; preliminary approval does not start full narration/rendering.
+- Signup includes Full Name, Email Address, Password, matching Confirm Password and Terms/Privacy acknowledgement; email/password remain credentials, with immediate session/dashboard and no mandatory email confirmation. Basic settings allow own-name editing, read-only email and secure authenticated password change; mandatory account deletion remains.
 - Three video types: Product Video, Educational Video and Project Explainer.
 - Three presentation styles: Animated Explainer, Cartoon Teacher and Cartoon Presenter. Cartoon Teacher applies only to Educational Video; see the full matrix in `docs/PRD.md` §8.
 - English narration and three English voice presets; English subtitles and on-video text by default.
@@ -29,11 +31,14 @@ The offline prototype pins Remotion/CLI 4.0.537, React/React DOM 19.2.9 and Type
 
 ## Documents
 
-- [`docs/PRD.md`](docs/PRD.md) — approved product requirements v2.4 and acceptance priorities.
-- [`docs/SYSTEM_ARCHITECTURE.md`](docs/SYSTEM_ARCHITECTURE.md) — approved architecture v1.1 and system invariants.
+- [`docs/PRD.md`](docs/PRD.md) — v2.5 records owner-approved UX/signup/settings alignment; revised document pending review, all acceptance IDs/priorities retained.
+- [`docs/SYSTEM_ARCHITECTURE.md`](docs/SYSTEM_ARCHITECTURE.md) — v1.2 corresponding UX/profile/approval responsibilities; technical boundaries preserved, revised document pending review.
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — planned M0–M6 work and exit evidence.
 - [`docs/PROGRESS.md`](docs/PROGRESS.md) — actual milestone status, decisions and evidence.
 - [`docs/M1_IMPLEMENTATION_PLAN.md`](docs/M1_IMPLEMENTATION_PLAN.md) — reviewable M1 foundation phases and requirement-to-test matrix; planning only.
+- [`docs/UI_UX_DESIGN.md`](docs/UI_UX_DESIGN.md) — v0.2, Draft / Owner Review; shared design system, five-step screens, missing Stitch references and alignment audit in §14.1.
+- [`docs/DATABASE_DESIGN.md`](docs/DATABASE_DESIGN.md) — v0.1 technical design for owner review: owned entities, private Storage/RLS, immutable approvals, durable work and staged schema responsibilities; no migrations applied.
+- [`docs/API_DESIGN.md`](docs/API_DESIGN.md) — v0.1 technical design for owner review: Auth/domain/worker contracts and all 63 acceptance criteria mapped to planned verification; no endpoints implemented.
 - [`AGENTS.md`](AGENTS.md) — permanent instructions for Codex contributors.
 
 The phase sections below preserve what was known at each stage. For current status and acceptance scope, use the status above and the formal sign-off in `docs/PROGRESS.md` together with the authoritative PRD and roadmap.
@@ -302,7 +307,7 @@ M0 is **Completed / Owner Approved** as of 21 October 2026. M1 is **Not Started 
 
 Phase 6A completed the bounded mid-render interruption, restart, resource and storage/bandwidth checks. Phase 6B completed the stronger timing, subtitle-mode and offline duration-boundary checks. Their measured evidence and limitations appear below; the owner subsequently approved formal M0 closure. Outstanding P2 scores/pilot comprehension are assigned to M5 and remain Not Verified.
 
-The approved PRD v2.4 assigns private uploads/Storage recovery and direct account isolation to M1 when those foundations exist; source-grounded image/document planning and seven-pair plan validation to M2; three voices, presenter and seven-pair rendering, real 62/75/90-second generation, durable jobs/worker restart and artifact recovery to M3; application controls and lifecycle completion to M4; and complete cross-feature private acceptance to M5. M6 handles production-specific release checks. Every P0 remains mandatory before release. See [ROADMAP.md](docs/ROADMAP.md) for destination, dependency and evidence, and [PROGRESS.md](docs/PROGRESS.md) for actual status.
+PRD v2.5 preserves the owner-approved v2.4 milestone split: private uploads/Storage recovery and direct account isolation belong to M1 when those foundations exist; source-grounded planning and seven-pair validation to M2; voices/rendering/durable jobs to M3; completed application/lifecycle controls to M4; complete integrated acceptance to M5; and production gates to M6. The limited signup/name/password alignment fits M1 account/auth foundations, not full AI-generation work. Every P0 remains mandatory. Legal text/acknowledgement interaction and any recording policy remain open; missing Stitch assets and actual commercial rights are not inferred from UI approval. See [ROADMAP.md](docs/ROADMAP.md) and [PROGRESS.md](docs/PROGRESS.md) for full assignments and evidence.
 
 The existing ElevenLabs Free-plan recordings are **noncommercial prototype assets**. Commercial use requires rights for the actual recordings and other assets; a later paid subscription is not presumed to license Free-plan recordings retroactively. The owner approved AI visual-theme recommendations, manual themes/backgrounds, advanced branding, character customization and voice matching, optional licensed/user-provided music with volume/fades/ducking, and later optional AI-generated music as conditional **post-V1** enhancements. They are outside current V1 acceptance. The earlier roadmap update made no provider request, render or asset change.
 

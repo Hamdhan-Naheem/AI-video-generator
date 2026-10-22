@@ -1,6 +1,6 @@
 # AI Video Creator V1 — development roadmap
 
-Source of truth: approved [`PRD.md`](PRD.md) v2.4, especially §§8, 23, 28–31, and [`SYSTEM_ARCHITECTURE.md`](SYSTEM_ARCHITECTURE.md) v1.1, especially §§2–4, 18, 21–24. This is a plan, not evidence that implementation has begun. No dates, provider plans or final numerical allowances are committed here.
+Source of truth: [`PRD.md`](PRD.md) v2.5, especially §§8, 11–12, 23, 28–31, and [`SYSTEM_ARCHITECTURE.md`](SYSTEM_ARCHITECTURE.md) v1.2, especially §§2–4, 6, 9, 18, 21–24. They record owner-approved alignment decisions dated 22 October 2026; revised documents remain pending owner review. This is a plan, not evidence implementation has begun. No provider plans or final numerical allowances are committed here.
 
 ## Milestone sequence and release discipline
 
@@ -35,6 +35,7 @@ The PRD §23 P0/P1/P2 classification controls every exit check: no public releas
 - Implement Supabase email/password signup with mandatory confirmation disabled and immediate own-dashboard access; login/logout, password recovery, session handling, password policy and throttling. Do not add owner allowlists or extra authentication flows.
 - Define owner-scoped PostgreSQL/RLS state for users, projects, drafts, revisions, assets, job/control/lifecycle foundations and private Supabase Storage paths. Enforce current account state in addition to token identity and test direct cross-account access before exposing user data.
 - Implement dashboard/project creation, minimal account settings, bounded private source upload validation, ownership checks, failed-upload cleanup/recovery and conflict-safe acknowledged draft saving. Keep secrets server/worker-only.
+- Align those existing M1 auth/basic-settings responsibilities with Full Name/Email/Password/Confirm Password/Terms-Privacy signup, matching confirmation without password/confirmation persistence, own-name Save Changes, read-only email and secure authenticated provider-supported password change with reauthentication where required. Legal content, acknowledgement interaction and any recording policy remain owner decisions before affected implementation; no consent schema is assumed. M4 retains full lifecycle and deletion. Shared UI foundations use one Pearl & Ocean Teal system and five-step Studio shell without moving later AI functionality into M1.
 
 **Exit evidence:** Two independent development accounts complete signup/login/recovery and see only their own dashboard, drafts and private files; direct cross-user API/RLS/Storage attempts fail; malformed/failed uploads recover without leaking or publishing partial data; autosave conflicts and session expiry are tested. Foundation remains local and does not imply public readiness.
 
@@ -74,7 +75,7 @@ The PRD §23 P0/P1/P2 classification controls every exit check: no public releas
 - Implement explicit, idempotent permanent account deletion: immediately deny new work/access, fence in-flight jobs, durably clean owned data and Storage before privileged Auth deletion, and resume cleanup after partial failure/restart without affecting other users or shared assets.
 - Add backend-configurable generation, script/idea/refinement, sample, concurrency, storage and shared provider limits with transactional reservations and clear recoverable user messages. Defer final numerical values/reset periods to measured evidence.
 - Add narrowly authorized backend-only generation pause, account restriction/restoration and content-free audit records. Persist controls; hold/recheck work as specified, while deletion cleanup continues through holds. No admin dashboard, payment flow or automatic upgrade.
-- Finish responsive four-stage UX, account settings/deletion confirmation, error recovery, accessibility and private media handling.
+- Finish responsive five-step Studio UX, integrated basic settings and separately placed mandatory deletion/confirmation/recovery, error handling, accessibility and private media. Script/scenes are explicitly approved in Step 2, with complete configuration separately confirmed in Step 4 after Step 3 settings; both decisions remain backend-enforced before full generation.
 
 **Exit evidence:** Full signup-to-download and revision/duplicate/delete flows work locally; quota and hold races cannot bypass state; deletion survives injected Storage/Auth/restart/late-write failures; other users' work and prior valid content remain isolated and preserved.
 
@@ -108,20 +109,20 @@ The PRD §23 P0/P1/P2 classification controls every exit check: no public releas
 
 ## Owner-approved post-V1 enhancement backlog
 
-The owner approved these capabilities as conditional **post-V1** work, not V1 scope or M0–M6 exit criteria. PRD v2.4 §27 excludes background music and advanced branding, while §§8–9 and AC09/F20 retain simple character presets and exactly three presentation styles. A later request to move an item into V1 would require an explicit PRD revision and, where provider/media/worker boundaries change, an architecture review. Visual themes vary appearance within an approved style; they do not add a fourth style or fifth creation stage.
+The owner approved these capabilities as conditional **post-V1** work, not V1 scope or M0–M6 exit criteria. PRD v2.5 §27 retains the v2.4 exclusions of background music and advanced branding, while §§8–9 and AC09/F20 retain simple character presets and exactly three presentation styles. A later request to move an item into V1 would require an explicit PRD revision and, where provider/media/worker boundaries change, an architecture review. Visual themes vary appearance within an approved style; they do not add a fourth style or sixth Studio step.
 
 M1–M6 labels in the dependency descriptions below identify the existing subsystem that a later post-V1 project would extend; they do not schedule this work into current V1 milestones.
 
 | Approved post-V1 capability | Dependency sequence for later implementation | Placement |
 | --- | --- | --- |
 | AI-recommended colors, backgrounds and visual themes from a user's prompt | M2: use Gemini to propose allowlisted, versioned palette/background/theme IDs with contrast/readability checks and user review; M3: render those IDs deterministically; M5: test claims, legibility and reproducibility | Post-V1 enhancement |
-| Manual background color, theme and light branding choices | M2: bind validated choices to the approved revision; M3: render the selected variant; M4: add simple controls within Describe/Review and preserve prior results; M5: test accessibility and saved-state behavior. A brand library/setup product remains outside the current PRD | Post-V1 enhancement |
+| Manual background color, theme and light branding choices | M2: bind validated choices to the approved revision; M3: render the selected variant; M4: add simple controls within Video Details / Script & Storyboard and preserve prior results; M5: test accessibility and saved-state behavior. A brand library/setup product remains outside the current PRD | Post-V1 enhancement |
 | Customizable prepared cartoon characters and voice-character matching | M2: extend the versioned character/voice compatibility registry and approval rules; M3: reuse basic speech cues with the selected compatible asset; M4: add selection controls; M5: test all supported combinations, defaults, rights and stale revisions. Define the extent of customization before implementation; arbitrary generated/rigged avatars are not implied | Post-V1 enhancement |
 | Optional background music for all three categories, using properly licensed tracks or user-provided audio | M1: private upload, ownership, file validation and rights metadata for user audio; M2: include the music choice in review/approval; M3: bounded local mixing; M4: music selection/on-off controls; M5: audio quality, rights and source/deletion tests; M6: commercial-rights review | Post-V1 enhancement |
 | Music volume, fade-in/out and narration-aware ducking | M3: deterministic mix against the narration master clock with clipping/peak guards and reusable checkpoints; M4: bounded user controls; M5: test speech intelligibility, quiet passages, transitions and exports across all categories | Post-V1 enhancement, after the licensed/user-audio path |
 | Optional AI-generated music | First decide provider, costs, licensing, privacy, moderation and failure limits; then adapt M2 approval, M3 generation/checkpoint/mixing and M5 rights/quality tests. A new AI provider or paid feature requires separate architecture and service authorization | Later post-V1 enhancement, after the basic music path |
 
-**Post-V1 implementation order:** establish validated theme/character/music identities and rights first; bind selections to immutable approvals; render/mix from those snapshots; add controls inside the existing four stages; then run cross-category, accessibility, ownership and licensing tests. Do not implement these items during M0–M6 without a new approved scope decision.
+**Post-V1 implementation order:** establish validated theme/character/music identities and rights first; bind selections to immutable approvals; render/mix from those snapshots; add controls inside the existing five Studio steps; then run cross-category, accessibility, ownership and licensing tests. Do not implement these items during M0–M6 without a new approved scope decision.
 
 ## Approved acceptance rescheduling trace
 

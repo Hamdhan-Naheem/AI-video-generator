@@ -5,9 +5,9 @@
 | Field | Value |
 | --- | --- |
 | Working name | AI Video Creator |
-| Release / document version | V1 / 2.4, approved M0 acceptance sequencing |
-| Updated | 21 October 2026, Asia/Colombo |
-| Status | Final product scope; technical defaults subject to M0 validation |
+| Release / document version | V1 / 2.5, owner-authorized UX requirements alignment |
+| Updated | 22 October 2026, Asia/Colombo |
+| Status | Owner-approved alignment decisions recorded; revised document pending owner review; technical defaults remain subject to validation |
 | Owner | Project owner |
 | Purpose | Requirements for later architecture, database, API, UI/UX and implementation planning |
 
@@ -17,15 +17,17 @@ Version 2.3 adds confirmed account deletion and minimal backend operational cont
 
 Version 2.4 records the owner's approved separation of M0 local feasibility from M1–M5 production implementation and testing. It retains every V1 feature and P0 release gate, records the three reviewed narrated prototypes, and places visual/character customization and music after V1. No P0 requirement is waived.
 
+Version 2.5 records the owner's 22 October 2026 decisions: exactly five shared-layout Studio steps; separate script/storyboard approval and final generation confirmation; Full Name, Email Address, Password, Confirm Password and Terms/Privacy acknowledgement at signup; and limited editable-name/read-only-email/secure password settings. Mandatory account deletion, all 63 acceptance identifiers and their 47 P0 / 13 P1 / 3 P2 priorities, the technical pipeline and milestone assignments are preserved. Legal content, the acknowledgement interaction/recording policy and missing Stitch references remain explicit review items. This is a documentation revision, not an implementation result or automatic approval of the revised document.
+
 **Confirmed** requirements are finalized product/technology decisions. **Proposed** defaults are numerical limits, thresholds and operational settings to validate in M0, not measured guarantees. **Future** capabilities are outside V1. Material changes must update this document.
 
-Navigation: [scope](#6-v1-scope-and-boundaries), [styles](#8-video-presentation-styles), [account screens](#11-information-architecture-and-application-screens), [user flow](#12-user-journeys-and-four-stage-workflow), [pipeline](#18-video-generation-workflow), [acceptance](#23-functional-acceptance-criteria), [edge cases](#24-edge-cases-and-failure-recovery), [feasibility](#28-technical-feasibility-and-testing).
+Navigation: [scope](#6-v1-scope-and-boundaries), [styles](#8-video-presentation-styles), [account screens](#11-information-architecture-and-application-screens), [user flow](#12-user-journeys-and-five-step-studio), [pipeline](#18-video-generation-workflow), [acceptance](#23-functional-acceptance-criteria), [edge cases](#24-edge-cases-and-failure-recovery), [feasibility](#28-technical-feasibility-and-testing).
 
 ## 2. Executive summary
 
 AI Video Creator is a multi-user, web-based AI video-generation SaaS. Each user has an independent account and private workspace for narrated, animated, downloadable MP4 videos made from ideas, photographs, educational topics, application screenshots and supported documents. Users supply content, review and approve the AI's understanding and script, then receive finished videos without manual animation or timeline editing. Develop and validate the complete application locally first, conduct private testing, then deploy publicly so new users can register, generate and download their own results.
 
-V1 has **one dashboard, exactly three video types, exactly three independent presentation styles, and four creation stages**. The types are Product Video, Educational Video and Project Explainer. The styles are Animated Explainer, Cartoon Teacher and Cartoon Presenter, with compatibility defined in section 8.
+V1 has **one dashboard, exactly three video types, exactly three independent presentation styles, and five Studio steps**. The types are Product Video, Educational Video and Project Explainer. The styles are Animated Explainer, Cartoon Teacher and Cartoon Presenter, with compatibility defined in section 8.
 
 Videos use English narration, English subtitles and video text by default, a vertical 9:16 composition, and a duration of **62–90 seconds inclusive**, default target **75 seconds**. Prepared 2D cartoon characters with basic speech-reactive mouth movement are included; realistic human avatars and guaranteed phoneme-accurate lip synchronization are excluded.
 
@@ -35,7 +37,7 @@ Gemini plans content; ElevenLabs produces narration and speech timing; Remotion 
 
 Users can describe what they want to explain, but scripting, recording narration, making graphics and synchronizing videos require multiple tools and production skills. Developers also need a short public explanation of a project without expecting viewers to read a long PRD.
 
-The product should let a person supply a small amount of useful information, approve a reviewable plan and receive an understandable video. Scripts, storyboards and images alone do not constitute completion. Keep useful defaults and a polished, responsive interface; additional capabilities fit the existing four stages.
+The product should let a person supply a small amount of useful information, approve a reviewable plan and receive an understandable video. Scripts, storyboards and images alone do not constitute completion. Keep useful defaults and a polished, responsive interface; additional capabilities fit the existing five steps.
 
 Multiple independent users must be supported from the first implementation, including local tests with separate accounts. Local development delays public hosting until quality and reliability are proven; it does not replace multi-user authorization with a configured-owner allowlist.
 
@@ -92,7 +94,7 @@ Independent email/password signup/login/logout/recovery; immediate post-signup d
 
 Also included: a simple confirmed Delete Account action, configurable generation/script/sample/concurrency limits, and backend-only pause/restriction controls with audit records. These additions fit existing account settings and infrastructure; they add no video stage, admin product or payment functionality.
 
-Four stages: **Describe → Review Script → Generate and Preview → Download**. Style/character selection fits these stages. No mandatory avatar editor, account activation wizard, brand onboarding or timeline editor.
+Exactly five user-facing steps: **Video Details → Script & Storyboard → Voice & Subtitles → Generate Video → Preview & Download**. All five share one Studio layout and wizard component. These steps do not imply five backend services, task kinds, statuses or separately deployed pages. Style/automatic character selection fits Video Details; no sixth step, mandatory avatar editor, account activation wizard, brand onboarding or timeline editor is added.
 
 ### 6.2 Confirmed output and language
 
@@ -145,7 +147,7 @@ Support readable application/landing-page screenshots with an optional explanati
 
 Confirm project name and status: **Concept**, **Prototype** or **Available**. Default audience is the general public. Optional inputs identify emphasis and closing action. Explain purpose, intended users, two or three features and a simple journey.
 
-Stage 2 displays a correctable “Here is what I understand” summary with source limitations/conflicts. Do not infer hidden functionality, portray planned features as available or imply static screenshots are working software recordings. Without screenshots use illustrative diagrams/text. Summarize long documents; do not narrate every requirement in 90 seconds.
+Step 2 Script & Storyboard displays a correctable “Here is what I understand” summary with source limitations/conflicts. Do not infer hidden functionality, portray planned features as available or imply static screenshots are working software recordings. Without screenshots use illustrative diagrams/text. Summarize long documents; do not narrate every requirement in 90 seconds.
 
 ## 8. Video presentation styles
 
@@ -173,7 +175,7 @@ A prepared 2D presenter introduces/concludes the video and may remain beside pro
 
 ### 8.4 Selection and fallbacks
 
-Select style in Describe with a sensible default. Proposed initial defaults are one prepared teacher and one prepared presenter, automatically assigned by style. With one preset per role, no separate selection/customization step is required. Keep a versioned extensible registry so additional predefined characters can be introduced later without redesigning planning, approval, cue generation or rendering. A large library and character editor are not required. Validate the teacher artwork in M0 and presenter artwork with M3 rendering.
+Select style in Video Details with a sensible default. Proposed initial defaults are one prepared teacher and one prepared presenter, automatically assigned by style. With one preset per role, no separate selection/customization step is required. Keep a versioned extensible registry so additional predefined characters can be introduced later without redesigning planning, approval, cue generation or rendering. A large library and character editor are not required. Validate the teacher artwork in M0 and presenter artwork with M3 rendering.
 
 Style/character changes require scene-plan review and invalidate affected approval/cue/render artifacts. Preserve compatible content/audio where safe. Reject stale incompatible client requests server-side.
 
@@ -215,7 +217,7 @@ No mandatory Rhubarb Lip Sync, HeyGen, D-ID, paid avatar API, realistic-human se
 
 | ID | Feature | V1 behavior |
 | --- | --- | --- |
-| F01 | Account access | Independent email/password signup with immediate dashboard access and no verification; login/logout and separate recovery link |
+| F01 | Account access | Independent email/password credentials; approved full-name/confirmation/legal-acknowledgement signup form, immediate dashboard and no verification; login/logout, separate recovery and limited own-name/secure password settings |
 | F02 | Dashboard | Each user's private workspace, projects, thumbnails, statuses and actions |
 | F03 | Video types | Exactly Product, Educational and Project Explainer |
 | F04 | Inputs | Descriptions, photos, screenshots, pasted text, text PDF and DOCX |
@@ -244,9 +246,11 @@ No mandatory Rhubarb Lip Sync, HeyGen, D-ID, paid avatar API, realistic-human se
 
 ### 11.1 Minimal authentication — final V1 decision
 
-**Supabase Auth, email and password only, supporting multiple independent accounts.** Provide Sign Up and enable account creation in the intended environment. Disable mandatory email confirmation for registration in local, test and production Supabase configurations. Successful signup creates a session and opens that user's dashboard immediately. Do not send a signup confirmation link, gate access on `email_confirmed_at`, or restrict valid users to a preconfigured owner ID. Production signup becomes publicly reachable only after release gates pass.
+**Supabase Auth with email and password as the authentication credentials, supporting multiple independent accounts.** The signup form additionally collects the approved profile/confirmation/acknowledgement inputs below; those do not introduce another authentication method. Provide Sign Up and enable account creation in the intended environment. Disable mandatory email confirmation for registration in local, test and production Supabase configurations. Successful signup creates a session and opens that user's dashboard immediately. Do not send a signup confirmation link, gate access on `email_confirmed_at`, or restrict valid users to a preconfigured owner ID. Production signup becomes publicly reachable only after release gates pass.
 
-Screens: Sign Up, Log In, Forgot Password and Reset Password; provide Log Out from the authenticated interface. Sign Up collects email and password only. Explicitly excluded: mandatory registration email verification, confirmation before first login, signup OTP, MFA, Google/Apple/other social authentication, phone authentication, magic-link login, account activation, invitation-management and complex onboarding. Password recovery remains supported and separate from signup verification. No additional authentication provider.
+Screens: Sign Up, Sign In (Log In), Forgot Password and Reset Password; provide Log Out from the authenticated interface. Sign Up contains **Full Name, Email Address, Password, Confirm Password, Create Account and Terms of Service/Privacy Policy acknowledgement**. Full Name is user-editable profile information, not a credential or authorization claim. Email and password remain the only authentication credentials. Confirm Password must match before submission and is form-validation input only: never persist it or plaintext passwords in application data/logs. Explicitly excluded: mandatory registration email verification, confirmation before first login, signup OTP, MFA, Google/Apple/other social authentication, phone authentication, magic-link login, account activation, invitation-management and complex onboarding. Password recovery remains supported and separate from signup verification. No additional authentication provider.
+
+The acknowledgement is part of the approved signup form. Displaying legal links, requiring an affirmative acknowledgement and retaining a consent record are distinct decisions. Actual legal text/destinations, whether a required checkbox or linked acknowledgement text is intended, and whether/how any acknowledgement is recorded must be confirmed by the owner before affected implementation. Do not silently omit the acknowledgement, infer a retention/compliance obligation or design a consent table/API here.
 
 Signup/reset passwords follow a proposed minimum of 8 characters, consistently enforced by Supabase/server validation. Allow password-manager paste/autofill and show the configured policy. Never silently trim/change passwords or store them in application data/logs. Stronger password settings, if chosen, are technical settings rather than another verification flow.
 
@@ -262,15 +266,19 @@ Basic rate limiting covers signup, login, recovery and expensive authenticated a
 
 Primary action: Create Video. Each authenticated user's dashboard lists only their own projects. Show title, type, modified date, status and thumbnail where available. Actions: Continue Editing, View Progress, Preview, Download, Duplicate, Delete. Paginate owner-filtered lists; do not download all video files. Empty state explains types. Private workspace means isolated user resources, not a team/collaboration workspace.
 
-Statuses: Draft, Generating, Ready, Needs Attention. A prior successful video remains accessible and labeled Previous Version while a newer revision processes/fails. Failures explain whether input changes, retry or operator action is needed.
+Canonical project statuses remain Draft, Generating, Ready and Needs Attention, distinct from durable job state and approval state. Friendly Awaiting Review is a current-revision review condition, Queued reflects queued work, Processing active work, Completed a verified Ready output, and Failed a failed attempt/Needs Attention presentation. These labels do not define new database enums. Held jobs show their actual Paused/Restricted reason. A prior successful video remains accessible and labeled Previous Version while a newer revision processes/fails. Failures explain whether input changes, retry or operator action is needed.
 
 ### 11.3 Creation workspace
 
-Four-stage indicator, visible saving state, primary stage action and Back navigation preserving content. Describe holds type/style/character defaults and duration. Review holds understanding, scene cards, voices, subtitles and approval. Generate and Preview holds progress/error/playback. Download offers MP4, dashboard and another video.
+One shared Studio layout with exactly five steps, visible acknowledged saving state, a primary step action and Back navigation preserving content. Video Details holds type/style/automatic character defaults, owned inputs and duration. Script & Storyboard holds understanding, scene cards, editing and explicit current script/scene approval. Voice & Subtitles holds the three English voice choices, permitted samples and subtitle settings. Generate Video requires explicit final confirmation of the complete current configuration and then shows actual progress/error/recovery. Preview & Download holds the verified private MP4, playback, export and review return. Preliminary script approval never starts narration or rendering automatically.
 
 Provider names, lip thresholds, queue internals and frame settings are not ordinary user controls. Use plain errors; operator diagnostics remain separate.
 
-### 11.4 Minimal account settings and deletion
+### 11.4 Basic account settings and mandatory deletion
+
+Account Settings includes **Profile Information** with editable Full Name, read-only Email Address and Save Changes, plus **Password & Security** with Change Password. Use real account data. Own-name updates require authenticated ownership/current-account checks and must never change roles, eligibility or ownership. Password changes use a secure authenticated Supabase-supported flow with authorization and reauthentication where required; never retrieve an existing password, show misleading prefilled masked values or log/store plaintext passwords. Preserve separate Forgot Password/Reset Password behavior. Provider-specific reauthentication/session details are validated before implementation, without inventing new authentication methods.
+
+This limited scope does not add photos, public profiles, roles/organizations, teams, social accounts, billing settings or advanced account preferences. Signup, limited own-name editing and authenticated password settings align with M1 authentication/account foundations; M4 retains completed application workflows and account deletion, with M5 integration as recorded in section 30. No exact table or endpoint is defined here.
 
 Provide Account Settings from the authenticated interface with a clearly labeled Delete Account action. Do not add a full profile-management system. Show a confirmation dialog stating that account/project/source/video deletion is permanent, work will stop, downloaded copies cannot be recalled and issued signed links may last until expiry. Require an explicit final confirmation; dismissing it makes no change. Do not introduce email verification, OTP, MFA or a new provider.
 
@@ -280,39 +288,45 @@ Authenticate and authorize the request against the signed-in user's ID; ignore a
 
 Use simple messages such as “You have reached your current generation limit,” “A video is already being generated,” “Video generation is temporarily paused,” or “Generation is restricted for this account.” Include a reset time only if configured/known, otherwise retry/support guidance. Ordinary limits, pauses and restrictions do not delete drafts or completed videos. Availability checks cover direct API requests, not just disabled buttons.
 
-## 12. User journeys and four-stage workflow
+## 12. User journeys and five-step Studio
 
 ```mermaid
 flowchart TD
     A[Email and password signup without email confirmation] --> B[Session and own dashboard immediately]
     L[Existing user email and password login] --> B
-    B --> C[1. Describe: type, style, character, inputs, duration]
-    C --> D[2. Review: understanding, script, scenes, voice, subtitles]
-    D --> E{Approve current revision?}
+    B --> C[1. Video Details: owned inputs, type, style, target]
+    C --> D[2. Script & Storyboard: understanding, edit, review]
+    D --> E{Approve current script and scenes?}
     E -->|Refine| D
-    E -->|Generate| F[3. Generate in background]
-    F --> G{Result}
-    G -->|Needs attention| H[Explain issue and recovery]
-    H -->|Eligible retry| F
-    H -->|Revise| D
-    G -->|Ready| I[Preview]
-    I -->|Revise| D
-    I -->|Accept| J[4. Download]
-    J --> B
+    E -->|Approved| F[3. Voice & Subtitles: supported settings]
+    F --> G[4. Generate Video: review complete configuration]
+    G --> H{Explicit final confirmation valid?}
+    H -->|Review required| D
+    H -->|Confirmed| I[Durable background generation]
+    I --> J{Result}
+    J -->|Needs attention| K[Saved issue and recovery in Step 4]
+    K -->|Eligible retry| I
+    K -->|Revise| D
+    J -->|Verified Ready| M[5. Preview & Download]
+    M -->|Revise| D
+    M -->|Return| B
 ```
 
-1. **Describe:** select type and compatible style, use its automatic character preset when applicable, and supply duration/inputs. Suggest Ideas is optional. Validate uploads/source limits.
-2. **Review Script:** show correctable understanding and scene cards with narration, visuals, avatar visibility/placement/actions and estimated duration. Edit/regenerate/refine, choose/sample voice, set subtitles, approve content/settings.
-3. **Generate and Preview:** submit durable job, validate assets/approval/quotas, create narration/timing, caption/avatar cues, compose/render, validate/save and preview. Show real stages, not invented percentages/ETAs. Leaving the page does not stop accepted work.
-4. **Download:** authorize a temporary MP4 link and retain output in the project. Enabled subtitles are burned into the export; toggling them requires re-rendering.
+1. **Video Details:** select type/compatible style and automatic character preset when applicable; supply target and owned inputs. Suggest Ideas is optional. Validate source limits. Dashboard quick-create text is prefilled; entering this step does not automatically initiate AI work.
+2. **Script & Storyboard:** show correctable understanding and scene cards with narration, visuals, character visibility/placement/actions and estimated timing. Edit/regenerate/refine and explicitly approve the current script and planned scenes. Preserve prior successful content. This decision does not authorize full narration or video generation.
+3. **Voice & Subtitles:** choose a configured English voice, intentionally play/request a permitted short sample and choose subtitle visibility. A sample is not full narration. Settings changes invalidate the relevant final approval and dependent artifacts; content changes additionally invalidate affected script/scene approval.
+4. **Generate Video:** explicitly confirm the complete current configuration and immutable content/asset/settings snapshot after the preceding decisions. Recheck ownership, approval, assets, quotas, holds and idempotency before durable submission and chargeable generation work. Show genuine progress/error/recovery; leaving does not cancel accepted work.
+5. **Preview & Download:** show only a verified current private MP4; authorize playback/download, retain output and offer return/revision. Enabled subtitles are burned into the export; changing visibility requires updated confirmation and re-rendering with compatible saved audio/cues.
+
+These are exactly five user-facing wizard steps in one shared layout. Backend stages may repeat, be skipped through valid asset reuse or have more/fewer technical substages; UI step count does not define service boundaries, job types, database statuses or page deployments. Explicit user-initiated planning and permitted voice samples keep their own eligibility/usage controls; the Step 4 confirmation authorizes full narration/rendering, not an automatic operation when Step 2 is approved.
 
 A local development worker advances jobs only while its process is running; stopped workers leave jobs queued. Show that work is waiting rather than implying it is processing.
 
-Return: login → dashboard → Continue Editing restores acknowledged content/resume stage. Expired sessions require login but do not cancel accepted jobs. Duplicate copies editable content and safe asset references, clears approval/jobs/errors/Ready status and opens Describe; deleting the original must not break its copy.
+Return: login → dashboard → Continue Editing restores acknowledged content/resume step and actual revision/job/output state. Expired sessions require login but do not cancel accepted jobs. Duplicate copies editable content and safe asset references, clears both content and final generation approvals/jobs/errors/Ready status and opens Video Details; deleting the original must not break its copy.
 
 Password recovery: Forgot Password → generic acknowledgement → valid email recovery link → Reset Password → email/password login → dashboard. This is independent of signup and not another video creation stage.
 
-Account deletion: Account Settings → Delete Account → explicit confirmation → authenticated deletion request → restricted deletion status/cleanup → Account Deleted, or a recoverable incomplete-deletion state. This is outside the four video stages and never runs as a side effect of logout or password recovery.
+Account deletion: Account Settings → separately placed Delete Account → explicit destructive confirmation → accepted/in-progress restricted cleanup → verified Account Deleted, or incomplete deletion/recovery. This is outside the five video steps and never runs as a side effect of logout or password recovery. Its missing Stitch visual treatment must be supplied; the feature remains mandatory.
 
 A global generation pause or account restriction shows the appropriate availability message while preserving permitted read access to existing drafts/videos. The job-state policy in section 20.5 determines whether queued work waits or a running stage can finish; users do not need operational controls in the UI.
 
@@ -324,7 +338,7 @@ Keep originals private; make bounded AI/preview derivatives, correct orientation
 
 Extract text without executing macros, embedded content, scripts or external links; bound DOCX archive expansion, parsing time and memory. Reject encrypted/corrupt/empty files with replacement/paste guidance. Identify unreadable/image-only pages in mixed PDFs, disclose incomplete understanding and show a concise extracted preview/count. Over-limit text requires an excerpt; never silently truncate.
 
-For supported long content, summarize bounded sections then combine while retaining evidence/main-feature coverage. Reserve model tokens for instructions/output; character count is not a token guarantee. Planning/extraction that cannot fit a lightweight request also uses the existing durable worker, within Describe/Review. No new stage or service.
+For supported long content, summarize bounded sections then combine while retaining evidence/main-feature coverage. Reserve model tokens for instructions/output; character count is not a token guarantee. Planning/extraction that cannot fit a lightweight request also uses the existing durable worker, within Video Details / Script & Storyboard. No new stage or service.
 
 Split long screenshots into readable bounded crops if possible, otherwise ask for clearer images/description. Do not crawl URLs. Show source conflicts; explicit user corrections take precedence after review.
 
@@ -375,7 +389,7 @@ Validate exact spans against narration with a documented Unicode offset conventi
 
 Separate spoken text from stage directions. Three optional ideas should be meaningfully distinct. Support direct edit, regenerate and instruction refinement; retain the last usable script on failures and restore-previous after full regeneration. Bounded repair may correct invalid schema; unsupported semantic requests require reviewable alternatives.
 
-Approval binds revision and settings hash, including sources, narration, scene plan, style, character/version, voice and duration. Changes invalidate affected approval; Generate can confirm a simple visual/subtitle revision within stage 2 without repeating extraction. Never substitute a new character plan under stale approval.
+Step 2 explicitly approves the current script and storyboard. Step 4 separately confirms the full revision/settings snapshot after Step 3 voice/subtitle selection, including sources, narration, scene plan, style, character/version, voice/model/settings, subtitles and target. Changes invalidate affected approval; a compatible settings/visual revision can reuse extraction/audio while requiring updated final confirmation. Never substitute a new character plan under stale approval.
 
 ## 15. ElevenLabs narration requirements
 
@@ -423,8 +437,10 @@ Before approval estimate length and offer expansion/shortening. After synthesis 
 flowchart TD
     A[Private inputs: type, style, character, sources] --> B[Validate and extract bounded content]
     B --> C[Gemini understanding and structured scene plan]
-    C --> D[User review and revision approval]
-    D --> E[Atomically enqueue immutable job]
+    C --> D[Step 2: explicit script and storyboard approval]
+    D --> V[Step 3: voice and subtitle settings]
+    V --> P[Step 4: explicit complete-configuration confirmation]
+    P --> E[Atomically enqueue immutable job]
     E --> F[Worker: authorization, quota and asset preflight]
     F --> G[ElevenLabs narration and alignment]
     G --> H{Audio, timing and duration valid?}
@@ -442,7 +458,7 @@ Validate/store private inputs, extract text and bounded image derivatives, then 
 
 ### 18.2 Submission and preflight
 
-Generate creates an immutable snapshot of authenticated user ID, content revision, approval, sources, type/style, character/version, voice/model/settings, subtitles, duration and template versions. Atomically enforce per-user active-job/request allowances and shared provider capacity before accepting work. Scope submission keys to the authenticated user and revision; repeated clicks/tabs return that user's accepted job, never another user's result. No monthly budget input is required. Free-first development and explicitly approved service activation follow section 26.
+Step 4 final confirmation requires current script/storyboard approval and freezes the complete configuration: authenticated user ID, content revision, both approval decisions, source identities/checksums, type/style, character/version, voice/model/settings, subtitles, duration and schema/template versions. Preliminary script approval alone cannot dispatch full narration or rendering. Editing content or dependent settings invalidates the appropriate decision and artifacts; final confirmation must match the current snapshot. Atomically enforce per-user active-job/request allowances and shared provider capacity before accepting work. Scope submission keys to the authenticated user and revision; repeated clicks/tabs return that user's accepted job, never another user's result. No monthly budget input is required. Free-first development and explicitly approved service activation follow section 26.
 
 Before paid calls check ownership, source availability, approved revision, provider configuration, output capacity and all required template/character assets including mouth states. Recheck constraints when a queued job starts; configuration or quotas may have changed since submission.
 
@@ -462,7 +478,7 @@ Stage-based progress is acceptable: Queued, Creating Voiceover, Building Scenes,
 | Source facts or video type | Revisit understanding/plan/approval; reuse audio only when approved spoken text and settings remain identical |
 | Style or character | Revalidate compatibility and scene plan, reapprove; rebuild character/scene/render artifacts; reuse identical audio |
 | Image or supported visual instruction | Revisit affected visual plan/approval; reuse compatible narration |
-| Subtitles only | Confirm settings in Review; render again with existing audio/cues |
+| Subtitles only | Confirm voice/subtitle settings in Step 3 and the final configuration in Step 4; render again with existing audio/cues |
 | Target duration | Revalidate fit and rebuild timeline; reuse audio only if it fits the new window |
 
 Retain the latest successful output during processing/failure of a new revision. Do not leave a changed project labeled Ready as if its old output matches the new content. Show both current revision status and Previous Version where relevant.
@@ -572,12 +588,12 @@ This is a requirements-level model, not a database schema or migration design.
 
 | Entity | Essential information |
 | --- | --- |
-| Auth user / profile | Independent Supabase user ID, account status/timestamps and generation allowance; no application password storage or required signup-activation state |
+| Auth user / profile | Independent Supabase user ID, editable full name, read-only account email, account status/timestamps and generation allowance; no application password/confirmation storage or required signup-activation state; legal-acknowledgement recording remains undecided |
 | Project | Owner, title, type, presentation style, selected character, target, resume stage, draft/current revision, latest successful output, deletion state |
 | Source asset | Owner, private storage key, checksum, MIME/size/dimensions/pages, processing/extraction status |
 | Project-asset reference | Project/revision, asset role/order/primary selection; reference-safe deletion |
 | Content revision | Immutable sources/settings/understanding/narration/scenes and schema/template versions |
-| Approval | Approving user, revision/settings hash, timestamp |
+| Approval | Explicit current script/scene review decision and final complete-configuration decision, approving user, immutable content/settings identity and time; conceptual responsibilities, not a table design |
 | Character/template registry | ID/version, role, compatible styles, layer/mouth assets, allowed placements/actions and usage-rights record |
 | Generation/planning job | Owner/project/revision, task kind/state/stage, attempts, idempotency key, lease/heartbeat, error and provider references |
 | Timing/animation artifact | Original/normalized alignment, scene/caption spans, speech activity and gesture/blink tracks, analysis/version settings |
@@ -662,14 +678,14 @@ All original AC01–AC47 identifiers and substantive checks are retained. AC23 n
 
 | ID | Requirement | Priority | Pass condition | Coverage |
 | --- | --- | --- | --- | --- |
-| AC01 | A new user can sign up with email/password, receive a session and immediately open their own dashboard without email confirmation, OTP or activation | P0 | Register a new address; a session and only that user's dashboard appear without following an email link. | F01 |
+| AC01 | A new user can use the approved Full Name/Email/Password/Confirm Password/Terms-Privacy acknowledgement signup form, receive a session and immediately open their own dashboard without email confirmation, OTP or activation | P0 | Submit the approved form with matching password confirmation; reject mismatches before submission and do not store plaintext passwords/confirmation; a session and only that user's dashboard appear without an email link. Legal interaction/recording details remain an explicit owner decision before affected implementation. | F01 |
 | AC02 | Valid login opens dashboard; logout removes app access; unauthenticated pages/APIs reject or redirect appropriately | P0 | Test valid/invalid login, logout and direct protected URL/API requests; no private response after logout. | F01 |
 | AC03 | Forgot Password acknowledges generically; a valid recovery link permits password reset and subsequent password login; invalid/expired/used links cannot reset | P0 | Exercise valid, expired, invalid and used recovery links; reset works independently and cannot create/merge accounts. | F01 |
 | AC04 | Multiple accounts can register; environment checks show mandatory signup confirmation disabled and no owner allowlist, email-confirmed gate, MFA, social/phone/magic-link login or verification UI | P0 | Inspect environment settings/UI; two accounts register without confirmation and without any excluded auth flow. | F01 |
 | AC05 | Password validation and signup/login/recovery throttling are enforced server/provider-side, including bypass attempts and reviewed unverified-email abuse scenarios | P0 | Submit weak passwords and repeated/direct auth requests; configured policy/throttling and unverified-email review pass. | F01, F22 |
 | AC06 | User A cannot list/read/edit/preview/download/duplicate/delete User B's project, files, revisions, jobs or artifacts through direct requests | P0 | With two accounts, attempt every listed operation using the other user's IDs; server and RLS deny all access. | All |
 | AC07 | Exactly three primary video types and three presentation styles appear; both client/server enforce section 8's matrix | P0 | Inspect exactly the three named types/styles; accept all seven compatible pairs and reject both incompatible pairs. | F03, F19 |
-| AC08 | Each video type uses four stages, required inputs and sensible defaults; return navigation restores acknowledged state | P0 | Complete each type's four-stage journey and refresh/return; required inputs, defaults and saved stage restore. | F02–F04, F14 |
+| AC08 | Each video type uses exactly five shared-layout Studio steps: Video Details, Script & Storyboard, Voice & Subtitles, Generate Video, Preview & Download; required inputs/defaults and acknowledged resume state remain intact | P0 | Complete each type's five-step journey, refresh/return and verify required inputs, defaults, current step and saved state restore; no sixth step is introduced. UI steps do not imply backend service/status/job counts. | F02–F04, F14 |
 | AC09 | Each cartoon style automatically uses its one simple compatible preset, without a customization step; Animated Explainer has none; invalid/stale IDs are rejected | P1 | Render each default preset and Animated Explainer; invalid/stale IDs fail safely. Invalid-asset safety is also P0 under AC32/AC39. | F19, F20 |
 | AC10 | Cartoon Teacher has introduction/conclusion with explanatory middle scenes; Presenter can accompany graphics; no character required in every scene | P1 | Preview a teacher introduction/explanation/conclusion and presenter-with-graphics; character-free middle scenes work. | F07, F20 |
 | AC11 | Initial character mouth-closed/open assets, blinking, head motion and supported gestures render without manual animation | P1 | Render closed/open mouths, blinking, head movement and a supported gesture without user animation controls. | F20, F21 |
@@ -684,7 +700,7 @@ All original AC01–AC47 identifiers and substantive checks are retained. AC23 n
 | AC20 | Edit, regenerate and refine preserve the last successful script on failure; regenerated draft can restore its predecessor | P1 | Edit, regenerate and refine; failures preserve saved content and restore-previous works. Data preservation is separately P0 under AC63. | F08 |
 | AC21 | All three configured English voices produce samples and narration; unavailable voices ask for reselection rather than substitution | P1 | Test all three voices' samples/full narration and unavailable-ID handling; no silent voice substitution. | F09 |
 | AC22 | Narration excludes stage instructions and approved spoken wording is preserved; generated scripts/subtitles are English | P0 | Compare generated audio/captions to approved English text; stage directions and unapproved wording are absent. | F07, F09, F12 |
-| AC23 | Generate requires current revision/settings approval and enforces the backend-configured simultaneous-job cap per user (proposed initial one), including repeated clicks/tabs | P0 | Race Generate calls across tabs; approved requests respect the backend-configured active cap (proposed initial one) and share an existing submission ID. | F16 |
+| AC23 | Generate requires explicit current script/storyboard approval plus separate final complete-configuration confirmation after voice/subtitle selection and enforces the backend-configured simultaneous-job cap per user (proposed initial one), including repeated clicks/tabs | P0 | Preliminary script approval cannot dispatch full narration/rendering; changed content/settings invalidate affected approval. Race final Generate calls across tabs: the current confirmed snapshot, active cap (proposed initial one) and existing submission identity are enforced. | F16 |
 | AC24 | Closing/refreshing the browser does not cancel durable accepted work; return shows accurate progress/result | P0 | Close/refresh during work, return and verify job/result persisted without relying on the browser process. | F14, F16 |
 | AC25 | A stopped local worker leaves queued jobs recoverable; restart/expired-lease recovery does not duplicate committed work | P0 | Stop/restart worker mid-stage and expire a lease; work recovers once without competing final publication. | F16 |
 | AC26 | Captions/important visual anchors use validated timing and meet the proposed 250 ms sampled target | P2 | Measure sampled anchors against the proposed 250 ms target and record deviations; target alone is nonblocking, while usable synchronization remains P0 under AC61. | F11, F12 |
@@ -720,11 +736,20 @@ All original AC01–AC47 identifiers and substantive checks are retained. AC23 n
 | AC56 | Account restriction stops expensive operations using authoritative state, including still-valid sessions | P0 | Restrict A, test script/sample/upload/video endpoints and worker checkpoints; queued work holds, no later expensive stage/publication starts, and B remains eligible. | F16, F22, F24 |
 | AC57 | Restoration and pause recovery preserve data, reservations, eligibility and cross-user isolation | P0 | Restore/resume once; recheck quota/approval/state, reuse checkpoints/job IDs and avoid duplicate provider calls; no restoration of deleting/deleted accounts or automatic deletion of retained data. | F16, F24 |
 | AC58 | Operational/deletion controls remain effective during failures and take precedence over generation holds | P0 | Inject unreadable control state, restart and concurrent commands; fail closed for expensive work, keep persisted pause/restrictions, and continue deletion cleanup despite holds/exhausted quotas. | F16, F23, F24 |
-| AC59 | Required V1 usability and accessibility are reviewed without changing the workflow | P1 | Check keyboard/focus/labels/contrast, responsive forms, clear recovery and four-stage navigation; document any approved exception without waiving core safety/readability. | F01, F02, F13 |
+| AC59 | Required V1 usability and accessibility are reviewed without changing the approved five-step workflow | P1 | Check keyboard/focus/labels/contrast, responsive forms, clear recovery and shared five-step navigation; document any approved exception without waiving core safety/readability. | F01, F02, F13 |
 | AC60 | Provisional cartoon timing/reviewer scores and nonessential visual polish are measured as nonblocking targets | P2 | Record section 9 numerical deviations and polish observations; retain functioning basic cartoon animation and core legibility; no feature is moved to future scope. | F10, F20, F21 |
 | AC61 | Core narration, captions, visuals and cartoon speech are coherent, readable and functionally synchronized | P0 | Watch each type/style: no materially wrong scene/phrase pairing, lost/inaudible speech, unreadable essential explanation or persistently speaking mouth in silence; exact millisecond targets remain separate. | F07, F09–F12, F20, F21 |
 | AC62 | Proposed performance/completion-rate/pilot-score optimizations are recorded without overriding correctness | P2 | Measure section 4.2 latency, completion and pilot targets on known resources; document misses; P0 functionality/recovery and P1 usability remain required under their rules. | All |
 | AC63 | Saved content and prior successful outputs are not lost during revision, duplication or recoverable failures | P0 | Inject refinement/duplicate/autosave/job failures and quota/pause/restriction; acknowledged source/script/draft data and prior valid videos survive unless explicitly deleted. | F08, F13–F16, F18, F24 |
+
+### 23.3 Proposed supplemental alignment checks — owner review
+
+The 63-row AC01–AC63 baseline and all priorities remain unchanged except the expressly aligned wording of AC01, AC08, AC23 and AC59. The following two additional checks are proposed test coverage for the approved limited settings feature, **not new numbered acceptance rows or verified results**. Review their placement before implementation; existing AC06 authorization, AC05 password safeguards and all P0 obligations still apply.
+
+- **Own-name update:** save a changed Full Name, reload and verify persistence; email remains read-only; failed save preserves acknowledged data; direct foreign-user and eligibility/role-field updates are rejected. M1 foundation, repeated in M5.
+- **Authenticated password change:** a verified eligible user can change their own password through the supported secure provider flow, with reauthentication where required; invalid/stale context and foreign-target attempts fail, password policy applies, no plaintext/confirmation is persisted or exposed, and separate recovery still works. Verify actual provider session behavior without claiming universal instant token revocation. M1 authentication, repeated in M5.
+
+Legal-text/acknowledgement interaction and any recording decision remain open; no consent-retention result or schema is assumed.
 
 ## 24. Edge cases and failure recovery
 
@@ -761,7 +786,7 @@ Each row specifies the user-visible outcome and the recovery behavior. Technical
 | Case | Expected behavior and recovery |
 | --- | --- |
 | Empty, vague or unrelated request | Ask a small clarification or suggest ideas, rather than inventing an application/product |
-| Multiple products/variants | Ask for intended product/primary asset in Describe/Review |
+| Multiple products/variants | Ask for intended product/primary asset in Video Details / Script & Storyboard |
 | Tiny text, blurry or very long screenshot | Explain unreadable content; bounded crops or clearer image/description |
 | Unsuitable aspect ratio or transparency | Use contained/framed contrasting layout; preserve focal content |
 | Oversize/decompression-heavy or mislabeled image | Reject using server validation before expensive processing; request replacement |
@@ -864,7 +889,7 @@ Each row specifies the user-visible outcome and the recovery behavior. Technical
 
 | Area | Requirement |
 | --- | --- |
-| Simplicity | One dashboard, four creation stages, defaults, no manual timeline/character animation or signup activation |
+| Simplicity | One dashboard, five Studio steps, defaults, no manual timeline/character animation or signup activation |
 | Accessibility | Keyboard operation, labels/focus, readable contrast, clear errors, reduced-motion interface support |
 | Responsiveness | Usable on desktop/mobile; test current Chrome, Edge and Safari; preview need not autoplay |
 | Reliability | Durable accepted jobs, lease recovery, bounded retries and artifact reuse |
@@ -1017,7 +1042,7 @@ This PRD does not assert that these gates have passed; they are requirements for
 | Milestone | Deliverable / exit condition |
 | --- | --- |
 | M0 — Technical Feasibility | Three reviewed narrated local category prototypes; complete remaining offline mid-render failure/local restart, bounded CPU/memory/disk and storage/bandwidth estimates, narration/visual-anchor/subtitle checks and offline duration boundaries before sign-off. Record P2 targets separately from functional failures. |
-| M1 — Application Foundation | Local Next.js/Tailwind, multi-user signup without confirmation, immediate private dashboards, login/logout/recovery, sessions/RLS and direct isolation tests, minimal Account Settings, lifecycle flags, private uploads/ownership with failed-upload recovery and draft saving |
+| M1 — Application Foundation | Local Next.js/Tailwind, multi-user signup without confirmation, immediate private dashboards, login/logout/recovery and secure authenticated password changes, full-name signup/profile editing and read-only email in basic Account Settings, sessions/RLS and direct isolation tests, lifecycle flags, private uploads/ownership with failed-upload recovery and draft saving |
 | M2 — AI Content Planning | Three types/styles and seven compatible planning paths, automatic simple character presets, bounded source-grounded extraction and Gemini understanding/ideas/scripts/scenes/refinement, invalid-pair rejection and immutable revision approval |
 | M3 — Video Generation Pipeline | Three English voices/samples, presenter and seven-pair rendering, real 62/75/90-second fit, ElevenLabs/cues/Remotion, durable worker leases/restart/progress/checkpoints, upload/artifact recovery and preflight/stage/publication checks |
 | M4 — Application Completion | Preview/download/revisions/duplication/project deletion; permanent account deletion with durable Auth/file cleanup; configurable quotas; minimal backend pause/restriction/restoration and audit controls |
@@ -1102,9 +1127,9 @@ Provider facts below were checked on **17 October 2026**. Recheck models, suppor
 
 ## 34. Change control and final requirements summary
 
-Confirmed V1: **a multi-user AI video-generation SaaS with independent accounts/private workspaces, three video types, three compatible presentation styles, four creation stages, English narration and 62–90 second vertical MP4s**. Retain the simple prepared 2D teacher/presenter defaults, extensible character registry and basic speech-reactive animation. The confirmed core pipeline is Gemini → ElevenLabs → application synchronization → Remotion; Next.js/React/TypeScript/Tailwind and Route Handlers provide the web/API layer, with Supabase Auth/PostgreSQL/private Storage and a durable independent Node.js worker.
+Confirmed V1: **a multi-user AI video-generation SaaS with independent accounts/private workspaces, three video types, three compatible presentation styles, five Studio steps, English narration and 62–90 second vertical MP4s**. Retain the simple prepared 2D teacher/presenter defaults, extensible character registry and basic speech-reactive animation. The confirmed core pipeline is Gemini → ElevenLabs → application synchronization → Remotion; Next.js/React/TypeScript/Tailwind and Route Handlers provide the web/API layer, with Supabase Auth/PostgreSQL/private Storage and a durable independent Node.js worker.
 
-Authentication is **multi-user email/password signup with immediate own-dashboard access, mandatory email confirmation disabled, login/logout and separate email-link password recovery**. No signup verification, OTP, MFA, social/phone authentication, activation workflow or configured-owner restriction. Private projects/files/jobs and generated videos remain isolated by authenticated user ID, server authorization and RLS.
+Authentication is **multi-user email/password credentials with immediate own-dashboard access, mandatory email confirmation disabled, login/logout and separate email-link password recovery**. The approved signup form adds editable-profile Full Name, matching nonstored Confirm Password and Terms/Privacy acknowledgement; basic settings permit own-name updates, read-only email and secure authenticated provider-supported password change. Legal content/acknowledgement interaction and any recording policy remain open. No signup verification, OTP, MFA, social/phone authentication, activation workflow or configured-owner restriction is added. Private projects/files/jobs and generated videos remain isolated by authenticated user ID, server authorization and RLS; mandatory separately confirmed account deletion remains intact.
 
 Release sequence: **local development → private multi-account testing → public SaaS deployment after all critical gates pass**. Public hosting uses Vercel for web/lightweight APIs, production Supabase and a separately hosted rendering worker independent of local computers/browsers. Isolate environment configuration/data/credentials. Development is free-first; public-operation costs, rights, abuse controls and per-user/shared limits are reviewed before release. No subscriptions, payment gateways, mandatory monthly budget forms, premature paid activation or new AI/avatar providers.
 
